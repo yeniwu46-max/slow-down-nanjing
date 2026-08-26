@@ -51,7 +51,9 @@ SPARK_MODEL=lite
 
 ## 部署
 
-主站按 Next.js 项目部署到 Vercel。构建命令为 `npm run build`。
+主站按 Next.js 项目部署到 Vercel。构建命令为 `npm run build`（`next build --webpack`）。
+
+- GitHub：https://github.com/yeniwu46-max/slow-down-nanjing
 
 可选在 Vercel 填写 `SPARK_API_PASSWORD`；不填也能完整演示。
 
