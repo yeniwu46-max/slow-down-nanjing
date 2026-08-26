@@ -177,6 +177,8 @@ AR：http://localhost:3006
 
 只部署 **Next 主站**。构建命令 `next build --webpack`（与本地 `npm run dev` 一致），输出由 Vercel 自动识别。
 
+当前生产地址：https://slow-down-nanjing.vercel.app
+
 注意：
 
 1. 不要上传 `.env.local`。
