@@ -1,0 +1,26 @@
+# Journiv ???? ? ?? Docker ???
+# ??: docker compose -f docker-compose.journiv.yml up -d
+# API:  http://localhost:8000/api/v1
+# ??: http://localhost:8000/docs
+
+services:
+  journiv:
+    image: swalabtech/journiv-app:latest
+    container_name: slow-down-journiv
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: slow-down-journiv-dev-secret-change-me
+      DOMAIN_NAME: localhost
+      ENABLE_CORS: "true"
+      CORS_ORIGINS: http://localhost:3005,http://127.0.0.1:3005,http://localhost:3006,http://127.0.0.1:3006
+      DB_DRIVER: sqlite
+      DATABASE_URL: sqlite:////data/journiv.db
+      DEBUG: "true"
+      ENVIRONMENT: development
+    volumes:
+      - journiv_data:/data
+    restart: unless-stopped
+
+volumes:
+  journiv_data:

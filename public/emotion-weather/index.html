@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>情绪气象局 · 宁可慢一点</title>
+  <link rel="stylesheet" href="/emotion-weather/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <!-- Hero -->
+    <section id="view-hero" class="view active">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <h1 class="hero-title">情绪气象局</h1>
+        <p class="hero-subtitle-en">Slow down, Feel Nanjing</p>
+        <p class="hero-tagline">在南京，用手势读懂心里的天气。</p>
+        <button id="btn-start" class="btn-primary">开始慢游观测</button>
+      </div>
+    </section>
+
+    <!-- Gesture Guide -->
+    <section id="view-guide" class="view">
+      <div class="guide-bg"></div>
+      <div class="guide-content">
+        <p class="guide-poetry">在南京的慢节奏里，不必说出口。<br>你的手，会替情绪找到形状。</p>
+        <div class="gesture-cards">
+          <div class="gesture-card">
+            <span class="gesture-icon">✊</span>
+            <h3>握拳</h3>
+            <p>风暴聚集</p>
+            <span class="gesture-meta">压抑 · 紧张</span>
+          </div>
+          <div class="gesture-card">
+            <span class="gesture-icon">👆</span>
+            <h3>轻点</h3>
+            <p>雨滴落下</p>
+            <span class="gesture-meta">释放 · 委屈</span>
+          </div>
+          <div class="gesture-card">
+            <span class="gesture-icon">👋</span>
+            <h3>挥手</h3>
+            <p>风散迷雾</p>
+            <span class="gesture-meta">焦虑 · 挣脱</span>
+          </div>
+          <div class="gesture-card">
+            <span class="gesture-icon">🖐</span>
+            <h3>抬手</h3>
+            <p>太阳升起</p>
+            <span class="gesture-meta">希望 · 恢复</span>
+          </div>
+          <div class="gesture-card">
+            <span class="gesture-icon">🙌</span>
+            <h3>双手打开</h3>
+            <p>云层散开</p>
+            <span class="gesture-meta">接纳 · 释怀</span>
+          </div>
+        </div>
+        <div id="camera-status" class="camera-status">
+          <span class="status-dot"></span>
+          <span class="status-text">正在请求摄像头权限…</span>
+        </div>
+        <p id="camera-error" class="camera-error hidden"></p>
+        <button id="btn-enter" class="btn-primary" disabled>进入观测空间</button>
+      </div>
+    </section>
+
+    <!-- Experience -->
+    <section id="view-experience" class="view">
+      <canvas id="weather-canvas"></canvas>
+      <video id="camera-video" autoplay playsinline muted></video>
+      <div class="experience-hud">
+        <div class="hud-row">
+          <span id="hud-camera" class="hud-dot"></span>
+          <span id="hud-weather">等待中</span>
+        </div>
+        <div class="hud-row hud-hand-row">
+          <span id="hud-hand-status" class="hud-hand-status">手部：未检测</span>
+        </div>
+        <div class="hud-meter">
+          <span class="hud-label">情绪浓度</span>
+          <div class="meter-track">
+            <div id="hud-concentration" class="meter-fill"></div>
+          </div>
+          <span id="hud-concentration-val" class="hud-val">0%</span>
+        </div>
+      </div>
+      <p id="poetic-line" class="poetic-line"></p>
+      <button id="btn-finish" class="btn-ghost hidden">完成观测</button>
+      <div id="hand-tracker" class="hand-tracker">
+        <div class="hand-tracker-header">
+          <span class="hand-tracker-title">手部定位</span>
+          <span id="hand-tracker-dot" class="hand-tracker-dot"></span>
+        </div>
+        <div class="hand-tracker-view">
+          <canvas id="hand-preview-canvas"></canvas>
+        </div>
+        <p id="hand-position-text" class="hand-position-text">将手掌移入画面以校准位置</p>
+      </div>
+    </section>
+
+    <!-- Report -->
+    <section id="view-report" class="view">
+      <div class="report-bg"></div>
+      <div class="report-wrapper">
+        <div id="report-card" class="report-card">
+          <h2 class="report-title">今日慢游情绪天气</h2>
+          <p class="report-title-en">Nanjing Weather of Mind</p>
+          <div class="report-divider"></div>
+          <div class="report-row">
+            <span class="report-label">天气状态</span>
+            <span id="report-weather" class="report-value">—</span>
+          </div>
+          <div class="report-row">
+            <span class="report-label">情绪浓度</span>
+            <span id="report-concentration" class="report-value">—</span>
+          </div>
+          <div class="report-row">
+            <span class="report-label">风速</span>
+            <span id="report-wind" class="report-value">—</span>
+          </div>
+          <div class="report-row">
+            <span class="report-label">可见度</span>
+            <span id="report-visibility" class="report-value">—</span>
+          </div>
+          <div class="report-message">
+            <p class="report-message-label">给自己的话</p>
+            <p id="report-quote" class="report-quote">—</p>
+          </div>
+        </div>
+        <div class="report-actions">
+          <button id="btn-save" class="btn-primary">保存卡片</button>
+          <button id="btn-restart" class="btn-ghost">重新体验</button>
+          <a href="/" class="btn-ghost report-home-link">继续慢游 →</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/emotion-weather/script.js"></script>
+</body>
+</html>
