@@ -64,5 +64,6 @@ export async function fetchWeatherFromOpenMeteo(
     lat,
     lng,
     fetchedAt: new Date().toISOString(),
+    source: "live",
   };
 }

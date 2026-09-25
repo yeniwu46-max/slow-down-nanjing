@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   Compass,
@@ -15,20 +15,85 @@ import {
   X,
 } from "lucide-react";
 import { applyPoiStates, getMapStats, getPoiById, MAP_POIS } from "@/lib/map/pois";
+import {
+  DEFAULT_PLANNING_OPTIONS,
+  walkingTimeFactor,
+  type PlanningOptions,
+} from "@/lib/map/planning";
 import { MOCK_ROUTES, WUTONG_ROUTE } from "@/lib/map/routes";
 import { recommendTwoRoutes } from "@/lib/map/recommend";
 import { useVisitStore } from "@/lib/map/visit-store";
 import type { MapFilter, MapPoi, MapRoute } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
-import { getArScanUrl, isArEnabledSpot } from "@/lib/ar/links";
-import { MapGestureEnhancement } from "@/components/gesture/page-gesture-effects";
+import { useWeather } from "@/hooks/use-weather";
 import { MapLibre, type MapLibreHandle } from "./map-libre";
 import { PoiPhotoCarousel } from "./poi-photo-carousel";
 import { RecommendPanel } from "./recommend-panel";
 
 const FILTERS: MapFilter[] = ["全部", "文化古迹", "自然风景", "街巷小巷", "文艺生活"];
 
-export function MapView() {
+const SCENARIOS: Record<NonNullable<PlanningOptions["scenarioId"]>, {
+  pickedIds: string[];
+  options: Partial<PlanningOptions>;
+}> = {
+  "rain-short": {
+    pickedIds: ["jiming-temple", "taicheng"],
+    options: {
+      originMode: "current",
+      startPoiId: null,
+      currentLocation: {
+        lat: 32.0699,
+        lng: 118.7969,
+        source: "nanjing-default",
+      },
+      timeBudgetMinutes: 45,
+      walkingAbility: "relaxed",
+      weatherCondition: "rainy",
+      preference: "efficiency",
+      departureTimeMinutes: 14 * 60,
+      closedPoiIds: [],
+      avoidCrowds: false,
+      nightMode: false,
+      cultureFocusTags: [],
+    },
+  },
+  "culture-closing": {
+    pickedIds: ["xuanwu-lake", "jiming-temple", "taicheng", "nanjing-museum", "presidential-palace"],
+    options: {
+      startPoiId: "xuanwu-lake",
+      timeBudgetMinutes: 150,
+      walkingAbility: "balanced",
+      weatherCondition: "cloudy",
+      preference: "culture",
+      departureTimeMinutes: 16 * 60 + 10,
+      closedPoiIds: [],
+      avoidCrowds: false,
+      nightMode: false,
+      cultureFocusTags: ["六朝文化"],
+    },
+  },
+  "weekend-night": {
+    pickedIds: ["1912", "presidential-palace", "confucius-temple", "laomendong", "yihe-road"],
+    options: {
+      startPoiId: "1912",
+      timeBudgetMinutes: 180,
+      walkingAbility: "balanced",
+      weatherCondition: "cloudy",
+      preference: "scenery",
+      departureTimeMinutes: 18 * 60 + 30,
+      closedPoiIds: ["presidential-palace"],
+      avoidCrowds: true,
+      nightMode: true,
+      cultureFocusTags: [],
+    },
+  },
+};
+
+export function MapView({
+  initialRecommendOpen = false,
+}: {
+  initialRecommendOpen?: boolean;
+}) {
   const searchParams = useSearchParams();
   const mapRef = useRef<MapLibreHandle>(null);
   const [activeFilter, setActiveFilter] = useState<MapFilter>("全部");
@@ -36,29 +101,59 @@ export function MapView() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [activeRoute, setActiveRoute] = useState<MapRoute>(WUTONG_ROUTE);
   const [altRoute, setAltRoute] = useState<MapRoute | null>(null);
-  const [recommendOpen, setRecommendOpen] = useState(false);
+  const [recommendOpen, setRecommendOpen] = useState(initialRecommendOpen);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [pickedIds, setPickedIds] = useState<string[]>([]);
+  const [planningOptions, setPlanningOptions] = useState<PlanningOptions>(
+    DEFAULT_PLANNING_OPTIONS,
+  );
   const [recShortest, setRecShortest] = useState<MapRoute | null>(null);
   const [recScenic, setRecScenic] = useState<MapRoute | null>(null);
+  const [hasGenerated, setHasGenerated] = useState(false);
+  const [replanMessage, setReplanMessage] = useState<string | null>(null);
+  const [dataUpdatedAt, setDataUpdatedAt] = useState("2026-09-01T08:00:00+08:00");
+  const [dataStatus, setDataStatus] = useState("本地场馆与道路样本（非实时）");
+  const pendingReasonRef = useRef("首次规划");
+  const { weather, error: weatherError, refresh: refreshWeather } = useWeather();
 
   const states = useVisitStore((s) => s.states);
   const setPoiState = useVisitStore((s) => s.setPoiState);
   const clearPoiState = useVisitStore((s) => s.clearPoiState);
-  const statedPois = applyPoiStates(states, MAP_POIS);
+  const statedPois = useMemo(() => applyPoiStates(states, MAP_POIS), [states]);
   const selectedPoi = selectedId
     ? statedPois.find((p) => p.id === selectedId) ?? null
     : null;
   const stats = getMapStats(statedPois, MOCK_ROUTES.length);
 
   useEffect(() => {
+    if (!weather || planningOptions.scenarioId) return;
+    const timer = window.setTimeout(() => {
+      pendingReasonRef.current = "天气数据变化";
+      setDataUpdatedAt(weather.fetchedAt);
+      setDataStatus(
+        weather.source === "live"
+          ? "南京天气接口 + 本地场馆与道路样本"
+          : weather.source === "cache"
+            ? "缓存天气 + 本地场馆与道路样本（非实时）"
+            : "南京默认天气 + 本地场馆与道路样本（非实时）",
+      );
+      setPlanningOptions((current) =>
+        current.weatherCondition === weather.condition
+          ? current
+          : { ...current, weatherCondition: weather.condition },
+      );
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [planningOptions.scenarioId, weather]);
+
+  useEffect(() => {
     const poiId = searchParams.get("poi");
     if (!poiId) return;
     const poi = getPoiById(poiId);
     if (!poi) return;
-    setSelectedId(poi.id);
-    setActiveFilter("全部");
     const timer = window.setTimeout(() => {
+      setSelectedId(poi.id);
+      setActiveFilter("全部");
       mapRef.current?.flyToPoi(poi);
     }, 400);
     return () => window.clearTimeout(timer);
@@ -67,11 +162,6 @@ export function MapView() {
   function handleFilter(filter: MapFilter) {
     setActiveFilter(filter);
     setSelectedId(null);
-  }
-
-  function cycleFilter() {
-    const idx = FILTERS.indexOf(activeFilter);
-    handleFilter(FILTERS[(idx + 1) % FILTERS.length]);
   }
 
   function selectPoi(poi: MapPoi) {
@@ -89,24 +179,127 @@ export function MapView() {
   }
 
   function togglePick(id: string) {
-    setPickedIds((ids) => {
-      if (ids.includes(id)) return ids.filter((x) => x !== id);
-      if (ids.length >= 5) return ids;
-      return [...ids, id];
-    });
+    pendingReasonRef.current = "地点列表变化";
+    if (pickedIds.includes(id)) {
+      setPickedIds(pickedIds.filter((item) => item !== id));
+      if (planningOptions.startPoiId === id) {
+        setPlanningOptions((current) => ({ ...current, startPoiId: null }));
+      }
+      return;
+    }
+    if (pickedIds.length >= 5) return;
+    setPickedIds([...pickedIds, id]);
+    if (planningOptions.originMode === "poi" && !planningOptions.startPoiId) {
+      setPlanningOptions((current) => ({ ...current, startPoiId: id }));
+    }
   }
 
-  function generateRecommend() {
-    const plannedIds = statedPois
+  function updatePlanningOptions(patch: Partial<PlanningOptions>) {
+    if ("weatherCondition" in patch) pendingReasonRef.current = "天气变化";
+    else if ("timeBudgetMinutes" in patch) pendingReasonRef.current = "剩余时间变化";
+    else if ("closedPoiIds" in patch) pendingReasonRef.current = "地点开放状态变化";
+    else pendingReasonRef.current = "体力或偏好变化";
+    setDataUpdatedAt(new Date().toISOString());
+    setPlanningOptions((current) => ({ ...current, ...patch }));
+  }
+
+  const resolveStartId = useCallback((): string | null => {
+    const availableIds = pickedIds.filter((id) => !planningOptions.closedPoiIds.includes(id));
+    if (
+      planningOptions.originMode === "poi" &&
+      planningOptions.startPoiId &&
+      availableIds.includes(planningOptions.startPoiId)
+    ) {
+      return planningOptions.startPoiId;
+    }
+
+    // Current/default coordinates are a true origin. The optimizer is free to
+    // choose the first stop instead of silently forcing the nearest POI.
+    if (planningOptions.originMode === "current" && planningOptions.currentLocation) return null;
+
+    return availableIds[0] ?? null;
+  }, [pickedIds, planningOptions]);
+
+  const runRecommend = useCallback((reason: string) => {
+    if (!pickedIds.length) {
+      setRecShortest(null);
+      setRecScenic(null);
+      setReplanMessage("没有可规划的地点，请重新选择。 ");
+      return;
+    }
+    const startedAt = performance.now();
+    const savedPlannedIds = statedPois
       .filter((p) => p.state === "planned")
       .map((p) => p.id);
-    const result = recommendTwoRoutes(pickedIds, plannedIds);
-    if (!result) return;
-    setRecShortest(result.shortest);
-    setRecScenic(result.scenic);
-    setActiveRoute(result.shortest);
-    setAltRoute(result.scenic);
-    mapRef.current?.fitRoute(result.shortest);
+    const culturalIds = planningOptions.preference === "culture"
+      ? statedPois.filter((poi) => pickedIds.includes(poi.id) && poi.category === "文化古迹").map((poi) => poi.id)
+      : [];
+    const result = recommendTwoRoutes(
+      pickedIds,
+      [...new Set([...savedPlannedIds, ...culturalIds])],
+      {
+        startId: resolveStartId(),
+        preference: planningOptions.preference,
+        timeBudgetMinutes: planningOptions.timeBudgetMinutes,
+        walkingFactor: walkingTimeFactor(planningOptions.walkingAbility),
+        weatherCondition: planningOptions.weatherCondition,
+        departureTimeMinutes: planningOptions.departureTimeMinutes,
+        closedPoiIds: planningOptions.closedPoiIds,
+        avoidCrowds: planningOptions.avoidCrowds,
+        nightMode: planningOptions.nightMode,
+        cultureFocusTags: planningOptions.cultureFocusTags,
+        dataUpdatedAt,
+        dataStatus,
+        originCoordinates: planningOptions.originMode === "current"
+          ? planningOptions.currentLocation
+          : null,
+      },
+    );
+    const calculationMs = Math.max(1, Math.round(performance.now() - startedAt));
+    if (!result) {
+      setRecShortest(null);
+      setRecScenic(null);
+      setReplanMessage("当前时间、闭馆状态和预算下没有可行路线。请增加时间或恢复地点。 ");
+      return;
+    }
+    const calculatedAt = new Date().toISOString();
+    const shortest = { ...result.shortest, calculationMs, calculatedAt };
+    const scenic = { ...result.scenic, calculationMs, calculatedAt };
+    const preferred = planningOptions.preference === "efficiency" ? shortest : scenic;
+    const alternative = preferred.id === shortest.id ? scenic : shortest;
+    setRecShortest(shortest);
+    setRecScenic(scenic);
+    setActiveRoute(preferred);
+    setAltRoute(alternative);
+    setReplanMessage(`${reason}，已在 ${calculationMs}ms 内重新规划`);
+    mapRef.current?.fitRoute(preferred);
+  }, [dataStatus, dataUpdatedAt, pickedIds, planningOptions, resolveStartId, statedPois]);
+
+  function generateRecommend() {
+    pendingReasonRef.current = "首次规划";
+    setHasGenerated(true);
+  }
+
+  useEffect(() => {
+    if (!hasGenerated) return;
+    const timer = window.setTimeout(() => {
+      runRecommend(pendingReasonRef.current);
+    }, 60);
+    return () => window.clearTimeout(timer);
+  }, [hasGenerated, pickedIds, planningOptions, runRecommend]);
+
+  function applyScenario(id: NonNullable<PlanningOptions["scenarioId"]>) {
+    const scenario = SCENARIOS[id];
+    pendingReasonRef.current = "验收场景变化";
+    setPickedIds(scenario.pickedIds);
+    setPlanningOptions({
+      ...DEFAULT_PLANNING_OPTIONS,
+      ...scenario.options,
+      scenarioId: id,
+    });
+    setDataUpdatedAt(new Date().toISOString());
+    setDataStatus("固定验收场景 + 本地场馆与道路样本（非实时）");
+    setHasGenerated(true);
   }
 
   function pickRecommended(route: MapRoute) {
@@ -138,11 +331,6 @@ export function MapView() {
         pitch={42}
         zoom={11.6}
         onPoiClick={selectPoi}
-      />
-
-      <MapGestureEnhancement
-        onFilterCycle={cycleFilter}
-        onRouteLight={() => mapRef.current?.resetView()}
       />
 
       <button
@@ -315,14 +503,6 @@ export function MapView() {
               </button>
             </div>
 
-            {isArEnabledSpot(selectedPoi.id) && (
-              <a
-                href={getArScanUrl(selectedPoi.id, "/badges")}
-                className="mt-2 block rounded-full bg-primary px-3 py-1.5 text-center text-[11px] font-medium text-white hover:bg-primary-hover"
-              >
-                玄武湖 AR 打卡
-              </a>
-            )}
           </div>
         </div>
       )}
@@ -333,10 +513,16 @@ export function MapView() {
         shortest={recShortest}
         scenic={recScenic}
         activeId={activeRoute.id}
+        planningOptions={planningOptions}
+        replanMessage={replanMessage}
+        weatherError={weatherError}
         onClose={() => setRecommendOpen(false)}
         onToggle={togglePick}
+        onPlanningChange={updatePlanningOptions}
         onGenerate={generateRecommend}
         onPickRoute={pickRecommended}
+        onApplyScenario={applyScenario}
+        onRefreshWeather={refreshWeather}
       />
 
       <button

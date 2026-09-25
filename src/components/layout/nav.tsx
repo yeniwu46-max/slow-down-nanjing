@@ -2,38 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
-import { GestureModeToggle } from "@/components/gesture/gesture-mode-toggle";
-import { getProfileOverrides } from "@/lib/user/local-profile";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { label: "首页", href: "/" },
-  { label: "我的地图", href: "/map" },
-  { label: "风物收纳所", href: "/game" },
-  { label: "徽章", href: "/badges" },
-  { label: "分享", href: "/share" },
-  { label: "城市日记", href: "/diary" },
+  { label: "智能路线规划", href: "/planner" },
+  { label: "经典路线", href: "/map" },
+  { label: "项目原理与数据说明", href: "/about" },
 ];
 
 export function Nav() {
   const pathname = usePathname();
-  const [userLabel, setUserLabel] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/journiv/auth")
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.authenticated && data.user) {
-          const overrides = getProfileOverrides();
-          setUserLabel(overrides.name ?? data.user.name ?? data.user.email?.split("@")[0]);
-        } else {
-          setUserLabel(null);
-        }
-      })
-      .catch(() => setUserLabel(null));
-  }, [pathname]);
+  function isActive(href: string) {
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 h-16 border-b border-white/50 glass">
@@ -48,12 +33,9 @@ export function Nav() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 md:flex lg:gap-9">
+        <nav className="hidden items-center gap-7 md:flex lg:gap-9" aria-label="主导航">
           {NAV_ITEMS.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+            const active = isActive(item.href);
 
             return (
               <Link
@@ -61,13 +43,13 @@ export function Nav() {
                 href={item.href}
                 className={cn(
                   "relative py-1 text-sm transition-colors",
-                  isActive
+                  active
                     ? "font-medium text-primary"
                     : "text-charcoal/80 hover:text-primary",
                 )}
               >
                 {item.label}
-                {isActive && (
+                {active && (
                   <span className="absolute -bottom-0.5 left-1/2 h-0.5 w-5 -translate-x-1/2 rounded-full bg-primary" />
                 )}
               </Link>
@@ -75,25 +57,41 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="flex items-center gap-2">
-          <GestureModeToggle />
-          <Link
-          href={userLabel ? "/profile" : "/login"}
-          className="flex items-center gap-1.5 rounded-full p-1 transition-opacity hover:opacity-80"
-          aria-label={userLabel ? `${userLabel} 的个人中心` : "账户"}
+        <button
+          type="button"
+          onClick={() => setMenuOpen((open) => !open)}
+          className="flex h-10 w-10 items-center justify-center rounded-full text-ink transition-colors hover:bg-white/60 md:hidden"
+          aria-label={menuOpen ? "关闭导航" : "打开导航"}
+          aria-expanded={menuOpen}
         >
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cloud/60 text-rock">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
-              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-            </svg>
-          </span>
-          {userLabel && (
-            <span className="hidden max-w-[80px] truncate text-sm text-ink md:inline">{userLabel}</span>
-          )}
-          <ChevronDown className="h-4 w-4 text-rock" />
-        </Link>
-        </div>
+          {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
+
+      {menuOpen && (
+        <nav
+          className="border-t border-white/50 bg-paper/95 px-5 py-3 shadow-m backdrop-blur-md md:hidden"
+          aria-label="移动端主导航"
+        >
+          <div className="mx-auto grid max-w-7xl gap-1">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  "rounded-xl px-3 py-2.5 text-sm transition-colors",
+                  isActive(item.href)
+                    ? "bg-primary/10 font-medium text-primary"
+                    : "text-charcoal/80 hover:bg-white/60 hover:text-primary",
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

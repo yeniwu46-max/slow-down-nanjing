@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
-import { AppProviders } from "@/components/providers/app-providers";
-import { GestureShell } from "@/components/gesture/gesture-shell";
 import "./globals.css";
 
 const notoSerif = Noto_Serif_SC({
@@ -19,7 +17,7 @@ const notoSans = Noto_Sans_SC({
 export const metadata: Metadata = {
   title: "\u5b81\u53ef\u6162\u4e00\u70b9 | Slow down, Feel Nanjing",
   description:
-    "用 AI 与 AR，让当代人走进金陵水墨，把日子过慢一点。Slow down, Feel Nanjing.",
+    "面向南京文旅慢游的智能路线规划应用，在时间、距离与风景之间找到更适合你的走法。",
 };
 
 export default function RootLayout({
@@ -33,10 +31,7 @@ export default function RootLayout({
       className={`${notoSerif.variable} ${notoSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-charcoal font-sans">
-        <AppProviders>
-          {children}
-          <GestureShell />
-        </AppProviders>
+        {children}
       </body>
     </html>
   );

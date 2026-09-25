@@ -2,8 +2,12 @@
 
 import { Sparkles, X } from "lucide-react";
 import { MAP_POIS } from "@/lib/map/pois";
+import type { PlanningOptions } from "@/lib/map/planning";
 import type { MapRoute } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
+import { DynamicPlanningControls } from "./dynamic-planning-controls";
+import { PlanningControls } from "./planning-controls";
+import { PlanningResults } from "./planning-results";
 
 interface RecommendPanelProps {
   open: boolean;
@@ -11,10 +15,16 @@ interface RecommendPanelProps {
   shortest: MapRoute | null;
   scenic: MapRoute | null;
   activeId: string | null;
+  planningOptions: PlanningOptions;
+  replanMessage: string | null;
+  weatherError: string | null;
   onClose: () => void;
   onToggle: (id: string) => void;
+  onPlanningChange: (patch: Partial<PlanningOptions>) => void;
   onGenerate: () => void;
   onPickRoute: (route: MapRoute) => void;
+  onApplyScenario: (id: NonNullable<PlanningOptions["scenarioId"]>) => void;
+  onRefreshWeather: () => void;
 }
 
 export function RecommendPanel({
@@ -23,15 +33,27 @@ export function RecommendPanel({
   shortest,
   scenic,
   activeId,
+  planningOptions,
+  replanMessage,
+  weatherError,
   onClose,
   onToggle,
+  onPlanningChange,
   onGenerate,
   onPickRoute,
+  onApplyScenario,
+  onRefreshWeather,
 }: RecommendPanelProps) {
   if (!open) return null;
 
   const count = selectedIds.length;
-  const ready = count >= 2 && count <= 5;
+  const openSelectedCount = selectedIds.filter(
+    (id) => !planningOptions.closedPoiIds.includes(id),
+  ).length;
+  const originReady = planningOptions.originMode === "current"
+    ? Boolean(planningOptions.currentLocation)
+    : openSelectedCount > 0;
+  const ready = count >= 2 && count <= 5 && openSelectedCount > 0 && originReady;
 
   return (
     <>
@@ -44,14 +66,14 @@ export function RecommendPanel({
       <div
         className={cn(
           "fixed z-40 flex flex-col glass-strong shadow-l",
-          "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-3xl",
-          "md:inset-auto md:right-6 md:top-20 md:w-[min(92vw,380px)] md:max-h-[min(78vh,640px)] md:rounded-3xl",
+          "inset-x-0 bottom-0 max-h-[88dvh] rounded-t-3xl",
+          "md:inset-auto md:right-6 md:top-20 md:w-[min(94vw,460px)] md:max-h-[min(84vh,760px)] md:rounded-3xl",
         )}
         role="dialog"
         aria-labelledby="recommend-title"
       >
         <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-cloud md:hidden" />
-        <div className="min-h-0 flex-1 overflow-y-auto p-4">
+        <div className="min-h-0 flex-1 overflow-y-auto p-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="flex items-start justify-between gap-2">
             <div>
               <p
@@ -62,7 +84,7 @@ export function RecommendPanel({
                 智能推荐
               </p>
               <p className="mt-1 text-[11px] leading-relaxed text-rock">
-                勾选 2～5 处，生成两条沿路折线：一条少走路，一条更慢、更愿意串湖与城墙。已标记「待前往」的点会尽量排在风景线前面。
+                选择 2～5 个候选地点。系统会在时间、天气和开放状态的硬约束内动态取舍。
               </p>
             </div>
             <button
@@ -75,7 +97,65 @@ export function RecommendPanel({
             </button>
           </div>
 
-          <div className="mt-3 rounded-2xl bg-white/45 p-2.5">
+          <div className="mt-3">
+            <p className="text-[10px] font-medium text-ink">固定验收场景</p>
+            <div className="mt-1.5 grid grid-cols-3 gap-1">
+              {[
+                ["rain-short", "雨天 45 分"],
+                ["culture-closing", "六朝与闭馆"],
+                ["weekend-night", "周末夜游"],
+              ].map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => onApplyScenario(id as NonNullable<PlanningOptions["scenarioId"]>)}
+                  className={cn(
+                    "rounded-lg px-1.5 py-2 text-[10px]",
+                    planningOptions.scenarioId === id
+                      ? "bg-gold text-white"
+                      : "bg-white/65 text-rock hover:bg-white",
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <PlanningControls
+            options={planningOptions}
+            selectedIds={selectedIds}
+            onChange={onPlanningChange}
+          />
+
+          <DynamicPlanningControls
+            options={planningOptions}
+            weatherError={weatherError}
+            onChange={onPlanningChange}
+            onRefreshWeather={onRefreshWeather}
+          />
+
+          {shortest && scenic && (
+            <PlanningResults
+              shortest={shortest}
+              scenic={scenic}
+              activeId={activeId}
+              timeBudgetMinutes={planningOptions.timeBudgetMinutes}
+              replanMessage={replanMessage}
+              onPickRoute={onPickRoute}
+            />
+          )}
+          {!shortest && replanMessage && (
+            <p className="mt-3 rounded-xl bg-amber-50 p-3 text-[10px] leading-relaxed text-amber-800" role="status">
+              {replanMessage}
+            </p>
+          )}
+
+          <details className="mt-3" open={!shortest && !scenic}>
+            <summary className="cursor-pointer text-[10px] font-medium text-ink">
+              {shortest && scenic ? "调整候选地点" : "选择候选地点"}
+            </summary>
+          <div className="mt-2 rounded-2xl bg-white/45 p-2.5">
             <p className="mb-1.5 text-[10px] font-medium text-ink">
               已选 {count}/5
             </p>
@@ -85,21 +165,36 @@ export function RecommendPanel({
               <ol className="space-y-1">
                 {selectedIds.map((id, i) => {
                   const poi = MAP_POIS.find((p) => p.id === id);
+                  const closed = planningOptions.closedPoiIds.includes(id);
                   return (
                     <li
                       key={id}
                       className="flex items-center justify-between gap-2 text-[11px] text-ink"
                     >
-                      <span className="truncate">
+                      <span className={cn("min-w-0 flex-1 truncate", closed && "text-amber-700 line-through")}>
                         {i + 1}. {poi?.name ?? id}
+                        {poi ? ` · ${poi.operatingHours.label}` : ""}
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => onToggle(id)}
-                        className="shrink-0 text-rock hover:text-ink"
-                      >
-                        去掉
-                      </button>
+                      <span className="flex shrink-0 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => onPlanningChange({
+                            closedPoiIds: closed
+                              ? planningOptions.closedPoiIds.filter((item) => item !== id)
+                              : [...planningOptions.closedPoiIds, id],
+                          })}
+                          className={cn("text-[10px]", closed ? "text-primary" : "text-amber-700")}
+                        >
+                          {closed ? "恢复" : "临时关闭"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => onToggle(id)}
+                          className="text-[10px] text-rock hover:text-ink"
+                        >
+                          去掉
+                        </button>
+                      </span>
                     </li>
                   );
                 })}
@@ -137,40 +232,13 @@ export function RecommendPanel({
             onClick={onGenerate}
             className="mt-3 w-full rounded-full bg-primary py-2 text-sm font-medium text-white transition-opacity disabled:opacity-40"
           >
-            {ready ? "生成两条规划路径" : `再选 ${Math.max(0, 2 - count)} 处`}
+            {ready
+              ? "生成两条规划路径"
+              : count < 2
+                ? `再选 ${Math.max(0, 2 - count)} 处`
+                : "请确认路线起点"}
           </button>
-
-          {shortest && scenic && (
-            <div className="mt-3 space-y-2 pb-4">
-              {[shortest, scenic].map((route) => (
-                <button
-                  key={route.id}
-                  type="button"
-                  onClick={() => onPickRoute(route)}
-                  className={cn(
-                    "w-full rounded-2xl p-3 text-left transition-colors",
-                    activeId === route.id
-                      ? "bg-primary/15 ring-1 ring-primary"
-                      : "bg-white/55 hover:bg-white/80",
-                  )}
-                >
-                  <p className="text-sm font-medium text-ink">{route.name}</p>
-                  <p className="mt-0.5 text-[11px] text-gold">
-                    {route.duration} · {route.distance}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-relaxed text-rock">
-                    {route.tagline}
-                  </p>
-                  <p className="mt-1 text-[10px] text-rock">
-                    {(route.poiIds ?? [])
-                      .map((id) => MAP_POIS.find((p) => p.id === id)?.name)
-                      .filter(Boolean)
-                      .join(" → ")}
-                  </p>
-                </button>
-              ))}
-            </div>
-          )}
+          </details>
         </div>
       </div>
     </>

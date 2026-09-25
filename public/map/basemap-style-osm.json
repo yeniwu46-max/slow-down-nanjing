@@ -1,7 +1,6 @@
 {
   "version": 8,
   "name": "Slow Down Nanjing OSM",
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
   "sources": {
     "osm": {
       "type": "raster",
@@ -12,6 +11,11 @@
     }
   },
   "layers": [
+    {
+      "id": "offline-paper",
+      "type": "background",
+      "paint": { "background-color": "#eee9df" }
+    },
     {
       "id": "osm-layer",
       "type": "raster",

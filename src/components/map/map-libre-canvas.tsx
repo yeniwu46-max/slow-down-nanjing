@@ -168,6 +168,7 @@ export const MapLibreCanvas = forwardRef<MapLibreHandle, MapLibreCanvasProps>(
     onPoiClickRef.current = onPoiClick;
     const [loaded, setLoaded] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
+    const [degraded, setDegraded] = useState(false);
 
     useImperativeHandle(ref, () => ({
       map: mapRef.current,
@@ -217,6 +218,7 @@ export const MapLibreCanvas = forwardRef<MapLibreHandle, MapLibreCanvasProps>(
 
       let cancelled = false;
       let ready = false;
+      let tileErrorCount = 0;
       styleIndexRef.current = 0;
 
       const map = new maplibregl.Map({
@@ -278,7 +280,7 @@ export const MapLibreCanvas = forwardRef<MapLibreHandle, MapLibreCanvasProps>(
       });
 
       map.on("error", (e) => {
-        if (cancelled || ready) return;
+        if (cancelled) return;
         const sourceId =
           "sourceId" in e && typeof e.sourceId === "string" ? e.sourceId : undefined;
         if (sourceId?.startsWith("slow-down")) return;
@@ -291,8 +293,12 @@ export const MapLibreCanvas = forwardRef<MapLibreHandle, MapLibreCanvasProps>(
           message.includes("Source") ||
           message.includes("Tile")
         ) {
-          console.warn("[MapLibre] style error, trying fallback:", message);
-          tryNextStyle();
+          if (ready) {
+            tileErrorCount += 1;
+            if (tileErrorCount >= 3) setDegraded(true);
+          } else {
+            tryNextStyle();
+          }
         }
       });
 
@@ -381,8 +387,20 @@ export const MapLibreCanvas = forwardRef<MapLibreHandle, MapLibreCanvasProps>(
           </div>
         )}
         {loadError && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-paper/90">
-            <p className="px-6 text-center text-sm text-rock">{loadError}</p>
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-paper/90 px-6 text-center">
+            <p className="text-sm text-rock">{loadError}。地点与路线数据已保留，可稍后重试。</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="rounded-full bg-primary px-4 py-2 text-xs font-medium text-white"
+            >
+              重试地图
+            </button>
+          </div>
+        )}
+        {degraded && !loadError && (
+          <div className="pointer-events-none absolute left-1/2 top-3 z-10 -translate-x-1/2 rounded-full bg-amber-50/95 px-3 py-1.5 text-[10px] text-amber-800 shadow-sm">
+            弱网模式：底图可能不完整，路线与地点仍可演示
           </div>
         )}
         {children}

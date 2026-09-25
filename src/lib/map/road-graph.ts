@@ -14,11 +14,50 @@ interface GraphEdge {
   to: string;
   kind: Kind;
   via: [number, number][];
+  walkMinutes: number;
+  scenicScore: number;
+  shelterScore: number;
+  crowdCost: number;
+  energyCost: number;
+  nightSuitability: number;
 }
 
-const KIND_WEIGHT: Record<RouteMode, Record<Kind, number>> = {
-  short: { scenic: 1.12, street: 1, trunk: 0.88 },
-  scenic: { scenic: 0.48, street: 1.02, trunk: 1.82 },
+export interface RoadPathMetrics {
+  walkingMinutes: number;
+  scenicScore: number;
+  shelterScore: number;
+  crowdCost: number;
+  energyCost: number;
+  nightSuitability: number;
+}
+
+export interface RoadPath {
+  coordinates: [number, number][];
+  metrics: RoadPathMetrics;
+}
+
+const KIND_PROFILE: Record<Kind, Omit<RoadPathMetrics, "walkingMinutes">> = {
+  scenic: {
+    scenicScore: 88,
+    shelterScore: 66,
+    crowdCost: 28,
+    energyCost: 34,
+    nightSuitability: 72,
+  },
+  street: {
+    scenicScore: 52,
+    shelterScore: 48,
+    crowdCost: 46,
+    energyCost: 42,
+    nightSuitability: 78,
+  },
+  trunk: {
+    scenicScore: 24,
+    shelterScore: 32,
+    crowdCost: 68,
+    energyCost: 55,
+    nightSuitability: 58,
+  },
 };
 
 function N(id: string, lng: number, lat: number): GraphNode {
@@ -177,8 +216,17 @@ const ADJ = new Map<string, GraphEdge[]>();
 for (const node of NODES) ADJ.set(node.id, []);
 for (const [kind, a, b, via] of RAW_EDGES) {
   if (!NODE_BY_ID.has(a) || !NODE_BY_ID.has(b)) continue;
-  ADJ.get(a)!.push({ to: b, kind, via });
-  ADJ.get(b)!.push({ to: a, kind, via: [...via].reverse() });
+  const forwardCoords = [nodeCoord(a), ...via, nodeCoord(b)];
+  const walkMinutes = Math.max(1, Math.round(coordsDistanceKm(forwardCoords) * 15));
+  const profile = KIND_PROFILE[kind];
+  ADJ.get(a)!.push({ to: b, kind, via, walkMinutes, ...profile });
+  ADJ.get(b)!.push({
+    to: a,
+    kind,
+    via: [...via].reverse(),
+    walkMinutes,
+    ...profile,
+  });
 }
 
 function nodeCoord(id: string): [number, number] {
@@ -186,9 +234,13 @@ function nodeCoord(id: string): [number, number] {
   return [n.lng, n.lat];
 }
 
-function edgeDistance(from: string, edge: GraphEdge): number {
-  const pts: [number, number][] = [nodeCoord(from), ...edge.via, nodeCoord(edge.to)];
-  return coordsDistanceKm(pts);
+function edgeWeight(edge: GraphEdge, mode: RouteMode): number {
+  if (mode === "short") {
+    return edge.walkMinutes * (1 + edge.crowdCost / 500 + edge.energyCost / 650);
+  }
+  return edge.walkMinutes * (
+    1.65 - edge.scenicScore / 145 - edge.shelterScore / 520 + edge.crowdCost / 430
+  );
 }
 
 function dijkstra(start: string, goal: string, mode: RouteMode): string[] | null {
@@ -213,7 +265,7 @@ function dijkstra(start: string, goal: string, mode: RouteMode): string[] | null
     if (u === goal) break;
     used.add(u);
     for (const edge of ADJ.get(u) ?? []) {
-      const w = edgeDistance(u, edge) * KIND_WEIGHT[mode][edge.kind];
+      const w = edgeWeight(edge, mode);
       const alt = best + w;
       if (alt < (dist.get(edge.to) ?? Infinity)) {
         dist.set(edge.to, alt);
@@ -252,6 +304,42 @@ function expandPath(nodeIds: string[]): [number, number][] {
   }
   return coords;
 }
+
+function pathEdges(nodeIds: string[]): GraphEdge[] {
+  const edges: GraphEdge[] = [];
+  for (let i = 1; i < nodeIds.length; i++) {
+    const edge = (ADJ.get(nodeIds[i - 1]) ?? []).find((item) => item.to === nodeIds[i]);
+    if (edge) edges.push(edge);
+  }
+  return edges;
+}
+
+function aggregateEdges(edges: GraphEdge[]): RoadPathMetrics {
+  const walkingMinutes = edges.reduce((sum, edge) => sum + edge.walkMinutes, 0);
+  const weightedAverage = (key: keyof Omit<RoadPathMetrics, "walkingMinutes">) => {
+    if (!walkingMinutes) return 0;
+    return Math.round(
+      edges.reduce((sum, edge) => sum + edge[key] * edge.walkMinutes, 0) / walkingMinutes,
+    );
+  };
+  return {
+    walkingMinutes,
+    scenicScore: weightedAverage("scenicScore"),
+    shelterScore: weightedAverage("shelterScore"),
+    crowdCost: weightedAverage("crowdCost"),
+    energyCost: weightedAverage("energyCost"),
+    nightSuitability: weightedAverage("nightSuitability"),
+  };
+}
+
+const EMPTY_METRICS: RoadPathMetrics = {
+  walkingMinutes: 0,
+  scenicScore: 0,
+  shelterScore: 0,
+  crowdCost: 0,
+  energyCost: 0,
+  nightSuitability: 0,
+};
 
 const LAKE_BOX = { minLng: 118.786, maxLng: 118.812, minLat: 32.066, maxLat: 32.082 };
 const MOUNTAIN_BOX = { minLng: 118.832, maxLng: 118.868, minLat: 32.046, maxLat: 32.074 };
@@ -313,9 +401,20 @@ export function pairPolyline(
   toId: string,
   mode: RouteMode,
 ): [number, number][] {
+  return pairRoadPath(fromId, toId, mode).coordinates;
+}
+
+function pairRoadPath(
+  fromId: string,
+  toId: string,
+  mode: RouteMode,
+): RoadPath {
   if (fromId === toId) {
     const p = getPoiById(fromId);
-    return p ? [[p.lng, p.lat]] : [];
+    return {
+      coordinates: p ? [[p.lng, p.lat]] : [],
+      metrics: EMPTY_METRICS,
+    };
   }
   const fromPoi = getPoiById(fromId);
   const toPoi = getPoiById(toId);
@@ -336,14 +435,26 @@ export function pairPolyline(
       const coords = expandPath(path);
       if (fromPoi) coords[0] = [fromPoi.lng, fromPoi.lat];
       if (toPoi) coords[coords.length - 1] = [toPoi.lng, toPoi.lat];
-      return coords;
+      return { coordinates: coords, metrics: aggregateEdges(pathEdges(path)) };
     }
   }
 
   if (fromPoi && toPoi) {
-    return manhattanVia([fromPoi.lng, fromPoi.lat], [toPoi.lng, toPoi.lat]);
+    const coordinates = manhattanVia([fromPoi.lng, fromPoi.lat], [toPoi.lng, toPoi.lat]);
+    const walkingMinutes = Math.round(coordsDistanceKm(coordinates) * 15);
+    return {
+      coordinates,
+      metrics: {
+        walkingMinutes,
+        scenicScore: 40,
+        shelterScore: 35,
+        crowdCost: 50,
+        energyCost: 50,
+        nightSuitability: 55,
+      },
+    };
   }
-  return [];
+  return { coordinates: [], metrics: EMPTY_METRICS };
 }
 
 export function alongRoadCoordinates(
@@ -364,6 +475,54 @@ export function alongRoadCoordinates(
     else coords.push(...seg.slice(1));
   }
   return coords;
+}
+
+export function alongRoadPath(
+  poiIds: string[],
+  mode: RouteMode = "scenic",
+): RoadPath {
+  const ids = poiIds.filter((id) => getPoiById(id));
+  if (ids.length === 0) return { coordinates: [], metrics: EMPTY_METRICS };
+  if (ids.length === 1) {
+    const poi = getPoiById(ids[0])!;
+    return { coordinates: [[poi.lng, poi.lat]], metrics: EMPTY_METRICS };
+  }
+
+  const coordinates: [number, number][] = [];
+  const segments: RoadPath[] = [];
+  for (let i = 1; i < ids.length; i++) {
+    const segment = pairRoadPath(ids[i - 1], ids[i], mode);
+    if (segment.coordinates.length === 0) continue;
+    segments.push(segment);
+    if (coordinates.length === 0) coordinates.push(...segment.coordinates);
+    else coordinates.push(...segment.coordinates.slice(1));
+  }
+
+  const walkingMinutes = segments.reduce(
+    (sum, segment) => sum + segment.metrics.walkingMinutes,
+    0,
+  );
+  const weightedAverage = (key: keyof Omit<RoadPathMetrics, "walkingMinutes">) => {
+    if (!walkingMinutes) return 0;
+    return Math.round(
+      segments.reduce(
+        (sum, segment) => sum + segment.metrics[key] * segment.metrics.walkingMinutes,
+        0,
+      ) / walkingMinutes,
+    );
+  };
+
+  return {
+    coordinates,
+    metrics: {
+      walkingMinutes,
+      scenicScore: weightedAverage("scenicScore"),
+      shelterScore: weightedAverage("shelterScore"),
+      crowdCost: weightedAverage("crowdCost"),
+      energyCost: weightedAverage("energyCost"),
+      nightSuitability: weightedAverage("nightSuitability"),
+    },
+  };
 }
 
 export function scenicShare(coords: [number, number][]): number {

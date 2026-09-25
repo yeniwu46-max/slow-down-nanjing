@@ -1,20 +1,8 @@
 {
   "version": 8,
-  "name": "Slow Down Nanjing Basemap",
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "name": "Slow Down Nanjing OSM Basemap",
   "sources": {
-    "carto-light": {
-      "type": "raster",
-      "tiles": [
-        "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-        "https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png"
-      ],
-      "tileSize": 256,
-      "maxzoom": 19,
-      "attribution": "&copy; OpenStreetMap &copy; CARTO"
-    },
-    "osm-fallback": {
+    "osm": {
       "type": "raster",
       "tiles": ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
       "tileSize": 256,
@@ -24,9 +12,9 @@
   },
   "layers": [
     {
-      "id": "carto-light-layer",
+      "id": "osm-layer",
       "type": "raster",
-      "source": "carto-light",
+      "source": "osm",
       "minzoom": 0,
       "maxzoom": 22
     }

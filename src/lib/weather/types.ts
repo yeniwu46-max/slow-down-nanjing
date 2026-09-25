@@ -8,6 +8,7 @@ export interface WeatherSnapshot {
   lat: number;
   lng: number;
   fetchedAt: string;
+  source: "live" | "cache" | "fallback";
 }
 
 export const NANJING_COORDS = { lat: 32.0603, lng: 118.7969 } as const;

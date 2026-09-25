@@ -8,7 +8,6 @@ export const NANJING_BOUNDS: [[number, number], [number, number]] = [
 
 /** Style URLs tried in order until one loads */
 export const MAP_STYLE_CANDIDATES = [
-  "/map/basemap-style.json",
   "/map/basemap-style-osm.json",
   "https://demotiles.maplibre.org/style.json",
   "https://tiles.openfreemap.org/styles/liberty",

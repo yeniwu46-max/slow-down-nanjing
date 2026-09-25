@@ -11,15 +11,15 @@ interface UseWeatherResult {
   refresh: () => void;
 }
 
-function readCache(): WeatherSnapshot | null {
+function readCache(allowStale = false): WeatherSnapshot | null {
   if (typeof sessionStorage === "undefined") return null;
   try {
     const raw = sessionStorage.getItem(WEATHER_CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as WeatherSnapshot;
     const age = Date.now() - new Date(parsed.fetchedAt).getTime();
-    if (age > 30 * 60 * 1000) return null;
-    return parsed;
+    if (!allowStale && age > 30 * 60 * 1000) return null;
+    return { ...parsed, source: "cache" };
   } catch {
     return null;
   }
@@ -33,31 +33,21 @@ function writeCache(snapshot: WeatherSnapshot) {
   }
 }
 
-function getGeolocation(): Promise<{ lat: number; lng: number } | null> {
-  return new Promise((resolve) => {
-    if (!navigator.geolocation) {
-      resolve(null);
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      () => resolve(null),
-      { timeout: 8000, maximumAge: 300_000 },
-    );
-  });
-}
-
 async function fetchWeather(lat: number, lng: number): Promise<WeatherSnapshot> {
   const params = new URLSearchParams({ lat: String(lat), lng: String(lng) });
-  const res = await fetch(`/api/weather?${params.toString()}`);
+  const res = await fetch(`/api/weather?${params.toString()}`, {
+    signal: AbortSignal.timeout(4500),
+  });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error ?? "天气获取失败");
   return data as WeatherSnapshot;
 }
 
 export function useWeather(): UseWeatherResult {
-  const [weather, setWeather] = useState<WeatherSnapshot | null>(() => readCache());
-  const [loading, setLoading] = useState(!readCache());
+  // Keep the server render and the first client render identical. Browser-only
+  // cache data is read by load() after hydration.
+  const [weather, setWeather] = useState<WeatherSnapshot | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async (skipCache = false) => {
@@ -74,30 +64,32 @@ export function useWeather(): UseWeatherResult {
     setError(null);
 
     try {
-      const coords = (await getGeolocation()) ?? NANJING_COORDS;
-      const snapshot = await fetchWeather(coords.lat, coords.lng);
+      const snapshot = await fetchWeather(NANJING_COORDS.lat, NANJING_COORDS.lng);
       writeCache(snapshot);
       setWeather(snapshot);
     } catch (err) {
       setError(err instanceof Error ? err.message : "天气获取失败");
-      setWeather((prev) =>
-        prev ?? {
+      setWeather((prev) => {
+        const cached = readCache(true);
+        return prev ?? cached ?? {
           condition: "cloudy",
           temperature: 22,
           isDay: true,
-          description: "多云",
+          description: "南京默认多云样本",
           lat: NANJING_COORDS.lat,
           lng: NANJING_COORDS.lng,
-          fetchedAt: new Date().toISOString(),
-        },
-      );
+          fetchedAt: "2026-09-01T08:00:00+08:00",
+          source: "fallback",
+        };
+      });
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void load();
+    const timer = window.setTimeout(() => void load(), 0);
+    return () => window.clearTimeout(timer);
   }, [load]);
 
   return {
