@@ -3,6 +3,7 @@
 金陵慢旅行 H5「宁可慢一点」竞赛演示版：主站（Next.js）+ AR 子应用（Vite）。
 
 - 技术文档：[docs/TECHNICAL.md](./docs/TECHNICAL.md)
+- 比赛版技术更新：[docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md](./docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md)
 - 架构说明：[ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ## 本地运行
@@ -43,11 +44,11 @@ SPARK_MODEL=lite
 | 路径 | 说明 |
 |---|---|
 | `/` | 首页 |
-| `/flow` | 智能推荐路线（8 条可轮换） |
-| `/map` | 南京地图与 23 个风物点 |
-| `/game` | 风物收纳所 |
-| `/agents` | 金陵 / 宁宁 / 风信 |
-| `/badges` | 徽章（AR 打卡回跳） |
+| `/planner` | 比赛版智能路线规划与动态重算 |
+| `/map` | 经典路线与 23 个南京风物点 |
+| `/about` | 项目原理、数据模型与数据边界 |
+
+比赛版导航只保留上述三个入口。原有智能体、情绪分析、AR、游戏、日记和徽章等模块源码仍保留，但已解除比赛主流程入口与运行依赖。
 
 ## 部署
 
