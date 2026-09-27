@@ -2,7 +2,7 @@
 
 > 版本 1.0 · 2026  
 > 产品：金陵慢旅行 H5「宁可慢一点」竞赛演示版  
-> 配套：[比赛版技术更新（2026-09-25）](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [README.md](../README.md)
+> 配套：[比赛版技术更新（2026-09-25）](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md) · [BGE 与路由技术栈](./BGE_AND_ROUTING_STACK.md) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [README.md](../README.md)
 
 > **当前比赛版说明：** 2026-09-25 起，比赛主流程已收敛为“智能路线规划、经典路线、项目原理与数据说明”三个一级入口。本文件后续章节仍保留完整产品和历史模块说明；当前比赛版的数据模型、动态重算、解释输出、弱网策略与实测结果以[比赛版技术更新](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md)为准。
 

@@ -1,0 +1,53 @@
+name: slowdown-competition
+
+services:
+  optimizer:
+    build:
+      context: ./integrations/optimizer
+    ports:
+      - "8010:8010"
+    restart: unless-stopped
+
+  valhalla:
+    image: ghcr.io/valhalla/valhalla-scripted:3.8.3
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./integrations/data/valhalla:/custom_files
+    environment:
+      server_threads: "2"
+      build_elevation: "False"
+      build_admins: "False"
+      build_time_zones: "False"
+      build_tar: "True"
+      use_tiles_ignore_pbf: "True"
+      force_rebuild: "False"
+      update_existing_config: "False"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://127.0.0.1:8002/status"]
+      interval: 15s
+      timeout: 5s
+      start_period: 120s
+      retries: 10
+    restart: unless-stopped
+
+  graphhopper:
+    profiles: ["tools"]
+    build:
+      context: ./integrations/graphhopper
+    ports:
+      - "8989:8989"
+    volumes:
+      - ./integrations/data/graphhopper:/data
+    restart: unless-stopped
+
+  graphhopper-maps:
+    profiles: ["tools"]
+    build:
+      context: ./integrations/graphhopper-maps
+    depends_on:
+      graphhopper:
+        condition: service_healthy
+    ports:
+      - "3007:3007"
+    restart: unless-stopped

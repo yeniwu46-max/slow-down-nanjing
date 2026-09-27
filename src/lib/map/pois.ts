@@ -15,6 +15,7 @@ function photos(id: string): string[] {
 
 type PoiCore = Omit<
   MapPoi,
+  | "knowledgeEntityId"
   | "suggestedStayMinutes"
   | "cultureTags"
   | "venueType"
@@ -428,6 +429,7 @@ export const MAP_POIS: MapPoi[] = BASE_POIS.map((poi) => {
   const { sourceLabel, ...metadata } = profile;
   return {
     ...poi,
+    knowledgeEntityId: `place:${poi.id}`,
     ...metadata,
     dataSources: dataSources(sourceLabel),
     operatingHours: OPERATING_HOURS[poi.id] ?? defaultHours(metadata.venueType),

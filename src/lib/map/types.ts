@@ -24,6 +24,7 @@ export interface OperatingHours {
 
 export interface MapPoi {
   id: string;
+  knowledgeEntityId: string;
   name: string;
   lng: number;
   lat: number;
@@ -52,6 +53,7 @@ export interface RouteMetrics {
   distanceKm: number;
   walkingMinutes: number;
   stayMinutes: number;
+  waitMinutes: number;
   scenicScore: number;
   shelterScore: number;
   crowdCost: number;
@@ -60,6 +62,11 @@ export interface RouteMetrics {
   indoorStayShare: number;
   restFacilityCount: number;
   cultureTags: string[];
+  cultureCoverageScore: number;
+  coveredCultureThemeIds: string[];
+  uncoveredCultureThemeIds: string[];
+  coveredCulturePeriodIds: string[];
+  semanticMatchScore?: number;
 }
 
 export interface ScheduledStop {
@@ -67,6 +74,32 @@ export interface ScheduledStop {
   arrivalMinutes: number;
   departureMinutes: number;
   stayMinutes: number;
+  waitMinutes?: number;
+}
+
+export interface AlgorithmRouteSummary {
+  kind: "baseline" | "intelligent" | "optimal";
+  label: string;
+  poiIds: string[];
+  distanceKm: number;
+  walkingMinutes: number;
+  stayMinutes: number;
+  waitMinutes: number;
+  totalMinutes: number;
+  feasible: boolean;
+  engine: string;
+  note: string;
+}
+
+export interface RouteAlgorithmComparison {
+  baseline: AlgorithmRouteSummary;
+  intelligent: AlgorithmRouteSummary;
+  optimal: AlgorithmRouteSummary;
+  optimalityGapPercent: number | null;
+  visitedGap: number;
+  exactValidation: boolean;
+  exploredOrders: number;
+  objective: string;
 }
 
 export interface MapRoute {
@@ -86,6 +119,18 @@ export interface MapRoute {
   dataStatus?: string;
   calculatedAt?: string;
   calculationMs?: number;
+  narrative?: import("../culture/types").RouteNarrative;
+  cultureOldestReviewedAt?: string | null;
+  routingData?: {
+    provider: string;
+    providerVersion: string | null;
+    costing: "pedestrian";
+    sourceDataset: string;
+    generatedAt: string;
+    attribution: string;
+    originFallbackUsed: boolean;
+  };
+  algorithmComparison?: RouteAlgorithmComparison;
 }
 
 export type MapFilter = "全部" | PoiCategory;

@@ -4,6 +4,9 @@
 
 - 技术文档：[docs/TECHNICAL.md](./docs/TECHNICAL.md)
 - 比赛版技术更新：[docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md](./docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md)
+- BGE 与路由技术栈：[docs/BGE_AND_ROUTING_STACK.md](./docs/BGE_AND_ROUTING_STACK.md)
+- 文化知识图谱与叙事链：[docs/CULTURAL_KNOWLEDGE_GRAPH.md](./docs/CULTURAL_KNOWLEDGE_GRAPH.md)
+- 第三阶段规划算法更新：[docs/PLANNING_ALGORITHM_STAGE3.md](./docs/PLANNING_ALGORITHM_STAGE3.md)
 - 架构说明：[ARCHITECTURE.md](./ARCHITECTURE.md)
 
 ## 本地运行
@@ -12,7 +15,17 @@
 
 ```powershell
 npm install
+npm run setup:semantic
 npm run dev
+```
+
+首次下载本地 BGE 模型后，访问 `/planner` 即可离线理解路线偏好。模型实体不提交 Git，比赛离线包需包含 `public/models/` 与 `public/wasm/`。
+
+文化图谱与向量数据检查：
+
+```powershell
+npm run culture:validate
+npm run check:embeddings
 ```
 
 ```powershell
@@ -49,6 +62,8 @@ SPARK_MODEL=lite
 | `/about` | 项目原理、数据模型与数据边界 |
 
 比赛版导航只保留上述三个入口。原有智能体、情绪分析、AR、游戏、日记和徽章等模块源码仍保留，但已解除比赛主流程入口与运行依赖。
+
+路线规划已接入 23×23 Valhalla / OpenStreetMap 步行矩阵、开放时间窗与预算硬约束，并在结果页比较基准路线、智能路线和精确最优验证路线。
 
 ## 部署
 

@@ -1,10 +1,30 @@
 import type { WeatherCondition } from "../weather/types";
+import type { SemanticIntent } from "../semantic/types";
+import {
+  buildRouteNarrative,
+  calculateCultureCoverage,
+  getKnowledgeEntity,
+  resolveCultureEntityIds,
+} from "../culture/graph";
+import {
+  solveBaselineOrder,
+  solveExactTimeWindowRoute,
+  type ExactOptimizationProblem,
+  type ExactOptimizationSolution,
+} from "../optimization/exact-solver";
+import {
+  getWalkingMatrixLeg,
+  WALKING_MATRIX,
+  walkingTimeMatrixMinutes,
+} from "../routing/walking-matrix";
 import { coordsDistanceKm } from "./geo";
 import { getPoiById } from "./pois";
 import { alongRoadPath, type RoadPath, type RoadPathMetrics, type RouteMode } from "./road-graph";
 import type {
+  AlgorithmRouteSummary,
   MapPoi,
   MapRoute,
+  RouteAlgorithmComparison,
   RouteExplanation,
   RouteMetrics,
   ScheduledStop,
@@ -21,9 +41,11 @@ export interface RecommendationOptions {
   avoidCrowds?: boolean;
   nightMode?: boolean;
   cultureFocusTags?: string[];
+  cultureFocusEntityIds?: string[];
   dataUpdatedAt: string;
   dataStatus: string;
   originCoordinates?: { lat: number; lng: number } | null;
+  semanticIntent?: SemanticIntent | null;
 }
 
 interface Candidate {
@@ -35,9 +57,13 @@ interface Candidate {
   stayMinutes: number[];
   scheduledStops: ScheduledStop[];
   totalMinutes: number;
+  walkingMinutes: number;
+  waitMinutes: number;
   rainyScore: number;
   sunnyScore: number;
-  cultureScore: number;
+  cultureCoverageScore: number;
+  cultureCoverage: ReturnType<typeof calculateCultureCoverage>;
+  semanticScore: number;
 }
 
 function orderedSelections<T>(items: T[]): T[][] {
@@ -140,13 +166,10 @@ function clockLabel(minutes: number): string {
   return `${String(Math.floor(normalized / 60)).padStart(2, "0")}:${String(normalized % 60).padStart(2, "0")}`;
 }
 
-function cultureScore(order: MapPoi[], focusTags: string[]): number {
-  return order.reduce((score, poi, index) => {
-    const matches = focusTags.length
-      ? poi.cultureTags.filter((tag) => focusTags.includes(tag)).length
-      : poi.cultureTags.length;
-    return score + matches * (order.length - index);
-  }, 0);
+function cultureFocusEntityIds(options: RecommendationOptions): string[] {
+  const fromTags = resolveCultureEntityIds(options.cultureFocusTags ?? []);
+  const fromSemantic = options.semanticIntent?.matches.flatMap((match) => match.matchedKnowledgeEntityIds) ?? [];
+  return [...new Set([...(options.cultureFocusEntityIds ?? []), ...fromTags, ...fromSemantic])].sort();
 }
 
 function rainyScore(order: MapPoi[]): number {
@@ -154,6 +177,12 @@ function rainyScore(order: MapPoi[]): number {
   return Math.round(
     order.reduce((sum, poi) => sum + poi.rainyDaySuitability * 20, 0) / order.length,
   );
+}
+
+function semanticScore(order: MapPoi[], intent?: SemanticIntent | null): number {
+  if (!intent || !order.length) return 0;
+  const scores = new Map(intent.matches.map((match) => [match.poiId, match.score]));
+  return Math.round(order.reduce((sum, poi) => sum + (scores.get(poi.id) ?? 0), 0) / order.length);
 }
 
 function sunnyScore(order: MapPoi[]): number {
@@ -171,30 +200,34 @@ function scheduleCandidate(
   legWalkingMinutes: number[],
   initialWalkingMinutes: number,
   options: RecommendationOptions,
-): { stays: number[]; stops: ScheduledStop[]; total: number } | null {
+): { stays: number[]; stops: ScheduledStop[]; total: number; wait: number } | null {
   const stays = order.map(minimumStay);
   const stops: ScheduledStop[] = [];
   let cursor = options.departureTimeMinutes + initialWalkingMinutes;
+  let totalWait = 0;
   for (let index = 0; index < order.length; index++) {
     if (index > 0) cursor += legWalkingMinutes[index - 1] ?? 0;
     const poi = order[index];
-    const departure = cursor + stays[index];
+    const waitMinutes = Math.max(0, poi.operatingHours.opensAtMinutes - cursor);
+    const arrival = cursor + waitMinutes;
+    const departure = arrival + stays[index];
     if (
-      cursor < poi.operatingHours.opensAtMinutes ||
       departure > poi.operatingHours.closesAtMinutes
     ) {
       return null;
     }
+    totalWait += waitMinutes;
     stops.push({
       poiId: poi.id,
-      arrivalMinutes: Math.round(cursor),
+      arrivalMinutes: Math.round(arrival),
       departureMinutes: Math.round(departure),
       stayMinutes: stays[index],
+      waitMinutes: Math.round(waitMinutes),
     });
     cursor = departure;
   }
   const total = Math.round(cursor - options.departureTimeMinutes);
-  return total <= options.timeBudgetMinutes ? { stays, stops, total } : null;
+  return total <= options.timeBudgetMinutes ? { stays, stops, total, wait: Math.round(totalWait) } : null;
 }
 
 function scoreCandidate(
@@ -204,7 +237,7 @@ function scoreCandidate(
   totalSelected: number,
 ): number {
   const omittedPenalty = (totalSelected - candidate.order.length) * 1000;
-  const cultureWeight = options.preference === "culture" ? 24 : 5;
+  const cultureBenefit = candidate.cultureCoverageScore * (options.preference === "culture" ? 0.15 : 0.05);
   const weatherBenefit = options.weatherCondition === "rainy"
     ? candidate.rainyScore * 0.28 + candidate.path.metrics.shelterScore * 0.18
     : options.weatherCondition === "sunny"
@@ -212,7 +245,8 @@ function scoreCandidate(
       : 0;
   const crowdPenalty = options.avoidCrowds ? candidate.path.metrics.crowdCost * 0.3 : 0;
   const nightBenefit = options.nightMode ? candidate.path.metrics.nightSuitability * 0.22 : 0;
-  const shared = omittedPenalty - candidate.cultureScore * cultureWeight + crowdPenalty - nightBenefit;
+  const semanticBenefit = Math.min(15, candidate.semanticScore * 0.15);
+  const shared = omittedPenalty - cultureBenefit + crowdPenalty - nightBenefit - semanticBenefit;
   if (mode === "short") {
     // “效率”仍以总时长和距离为主，但在恶劣天气下允许小幅绕行，
     // 避免把明显不适宜的露天点机械地判为最优。
@@ -232,6 +266,7 @@ function toRoute(
   options: RecommendationOptions,
 ): MapRoute {
   const { order, path, stayMinutes, scheduledStops, totalMinutes } = candidate;
+  const focusEntityIds = cultureFocusEntityIds(options);
   const stayTotal = stayMinutes.reduce((sum, value) => sum + value, 0);
   const indoorMinutes = order.reduce((sum, poi, index) => {
     const stay = stayMinutes[index];
@@ -239,12 +274,13 @@ function toRoute(
     if (poi.venueType === "mixed") return sum + stay * 0.5;
     return sum;
   }, 0);
-  const walkingMinutes = Math.round(path.metrics.walkingMinutes * options.walkingFactor);
+  const walkingMinutes = candidate.walkingMinutes;
   const poiEnergy = order.reduce((sum, poi) => sum + poi.energyLevel * 20, 0) / order.length;
   const metrics: RouteMetrics = {
     distanceKm: candidate.km,
     walkingMinutes,
     stayMinutes: stayTotal,
+    waitMinutes: candidate.waitMinutes,
     scenicScore: path.metrics.scenicScore,
     shelterScore: path.metrics.shelterScore,
     crowdCost: path.metrics.crowdCost,
@@ -256,7 +292,13 @@ function toRoute(
     indoorStayShare: stayTotal ? Math.round((indoorMinutes / stayTotal) * 100) : 0,
     restFacilityCount: order.filter((poi) => poi.restFacilities.length > 0).length,
     cultureTags: [...new Set(order.flatMap((poi) => poi.cultureTags))],
+    cultureCoverageScore: candidate.cultureCoverage.score,
+    coveredCultureThemeIds: candidate.cultureCoverage.coveredThemeIds,
+    uncoveredCultureThemeIds: candidate.cultureCoverage.uncoveredThemeIds,
+    coveredCulturePeriodIds: candidate.cultureCoverage.coveredPeriodIds,
+    semanticMatchScore: candidate.semanticScore,
   };
+  const narrative = buildRouteNarrative(order.map((poi) => poi.id), focusEntityIds);
   return {
     id,
     name,
@@ -271,6 +313,17 @@ function toRoute(
     completionTime: clockLabel(options.departureTimeMinutes + totalMinutes),
     dataUpdatedAt: options.dataUpdatedAt,
     dataStatus: options.dataStatus,
+    narrative,
+    cultureOldestReviewedAt: narrative.oldestReviewedAt,
+    routingData: {
+      provider: WALKING_MATRIX.provider,
+      providerVersion: WALKING_MATRIX.providerVersion,
+      costing: WALKING_MATRIX.costing,
+      sourceDataset: WALKING_MATRIX.sourceDataset,
+      generatedAt: WALKING_MATRIX.generatedAt,
+      attribution: WALKING_MATRIX.attribution,
+      originFallbackUsed: Boolean(options.originCoordinates),
+    },
   };
 }
 
@@ -311,10 +364,38 @@ function explainRoute(
     });
   }
   if (options.preference === "culture") {
-    const focus = options.cultureFocusTags?.length
-      ? options.cultureFocusTags.join("、")
-      : metrics.cultureTags.slice(0, 3).join("、");
-    explanations.push({ id: "culture", tone: "culture", text: `优先覆盖文化主题：${focus}` });
+    const focusLabels = cultureFocusEntityIds(options)
+      .map((id) => getKnowledgeEntity(id)?.label)
+      .filter((label): label is string => Boolean(label));
+    const coveredLabels = metrics.coveredCultureThemeIds
+      .map((id) => getKnowledgeEntity(id)?.label)
+      .filter((label): label is string => Boolean(label));
+    explanations.push({
+      id: "culture",
+      tone: "culture",
+      text: `文化主题覆盖率 ${metrics.cultureCoverageScore}%${focusLabels.length ? `，重点响应${focusLabels.slice(0, 3).join("、")}` : `，已覆盖${coveredLabels.slice(0, 3).join("、")}`}`,
+    });
+  }
+  if (options.semanticIntent) {
+    const routePoiIds = new Set(route.poiIds ?? []);
+    const routeMatches = options.semanticIntent.matches
+      .filter((match) => routePoiIds.has(match.poiId))
+      .sort((a, b) => b.score - a.score);
+    const highlighted = routeMatches
+      .slice(0, 2)
+      .map((match) => getPoiById(match.poiId)?.name)
+      .filter(Boolean)
+      .join("、");
+    const matchedEntities = [...new Set(routeMatches.flatMap((match) => match.matchedKnowledgeEntityIds))]
+      .map((id) => getKnowledgeEntity(id)?.label)
+      .filter((label): label is string => Boolean(label));
+    const matchedTags = [...new Set(routeMatches.flatMap((match) => match.matchedTags))];
+    const matchedLabels = [...new Set([...matchedEntities, ...matchedTags])].slice(0, 3);
+    explanations.push({
+      id: "semantic",
+      tone: "culture",
+      text: `与“${options.semanticIntent.query.slice(0, 28)}”相对匹配 ${metrics.semanticMatchScore ?? 0}/100${highlighted ? `，${highlighted}获得偏好加分` : ""}${matchedLabels.length ? `；图谱命中${matchedLabels.join("、")}` : ""}`,
+    });
   }
   if (options.avoidCrowds) {
     const reduction = comparePercent(metrics.crowdCost, other.crowdCost);
@@ -367,7 +448,7 @@ function explainRoute(
   explanations.push({
     id: "time",
     tone: "efficiency",
-    text: `步行 ${metrics.walkingMinutes} 分钟 + 游览 ${metrics.stayMinutes} 分钟，预计 ${route.completionTime} 完成`,
+    text: `步行 ${metrics.walkingMinutes} 分钟 + 游览 ${metrics.stayMinutes} 分钟${metrics.waitMinutes ? ` + 等候 ${metrics.waitMinutes} 分钟` : ""}，预计 ${route.completionTime} 完成`,
   });
   explanations.push({
     id: "rest",
@@ -400,6 +481,7 @@ export function recommendTwoRoutes(
       ]
     : orderedSelections(pois);
   const planned = new Set(plannedIds);
+  const focusEntityIds = cultureFocusEntityIds(options);
   const pairCache = new Map<string, RoadPath>();
   const getPair = (from: MapPoi, to: MapPoi, mode: RouteMode) => {
     const cacheKey = `${mode}:${from.id}>${to.id}`;
@@ -436,26 +518,41 @@ export function recommendTwoRoutes(
       const routeSegments = order.slice(1).map((poi, index) => getPair(order[index], poi, mode));
       const originSegment = getOriginSegment(order[0]);
       const path = mergeSegments(originSegment ? [originSegment, ...routeSegments] : routeSegments, order[0]);
-      const legWalkingMinutes = routeSegments.map((segment) =>
-        Math.round(segment.metrics.walkingMinutes * options.walkingFactor),
+      const matrixLegs = order.slice(1).map((poi, index) => {
+        const leg = getWalkingMatrixLeg(order[index].id, poi.id);
+        if (!leg) throw new Error(`Missing walking matrix leg ${order[index].id}>${poi.id}`);
+        return leg;
+      });
+      const legWalkingMinutes = matrixLegs.map((leg) =>
+        Math.max(1, Math.ceil(leg.durationSeconds * options.walkingFactor / 60)),
       );
       const initialWalkingMinutes = originSegment
         ? Math.round(originSegment.metrics.walkingMinutes * options.walkingFactor)
         : 0;
       const schedule = scheduleCandidate(order, legWalkingMinutes, initialWalkingMinutes, options);
       if (!schedule) return [];
+      const cultureCoverage = calculateCultureCoverage(
+        order.map((poi) => poi.id),
+        pois.map((poi) => poi.id),
+        focusEntityIds,
+      );
       return [{
         order,
         path,
-        km: coordsDistanceKm(path.coordinates),
+        km: matrixLegs.reduce((sum, leg) => sum + leg.distanceKm, 0)
+          + (originSegment ? coordsDistanceKm(originSegment.coordinates) : 0),
         reversals: headingReversals(path.coordinates),
         planned: plannedFrontScore(order, planned),
         stayMinutes: schedule.stays,
         scheduledStops: schedule.stops,
         totalMinutes: schedule.total,
+        walkingMinutes: initialWalkingMinutes + legWalkingMinutes.reduce((sum, value) => sum + value, 0),
+        waitMinutes: schedule.wait,
         rainyScore: rainyScore(order),
         sunnyScore: sunnyScore(order),
-        cultureScore: cultureScore(order, options.cultureFocusTags ?? []),
+        cultureCoverageScore: cultureCoverage.score,
+        cultureCoverage,
+        semanticScore: semanticScore(order, options.semanticIntent),
       }];
     });
   }
@@ -474,6 +571,115 @@ export function recommendTwoRoutes(
       candidate.order.length === scenicTop.order.length &&
       keyOf(candidate.order) !== keyOf(shortest.order),
   ) ?? scenicTop;
+
+  const optimizerPoiIds = pois.map((poi) => poi.id);
+  const poiTravelMatrix = walkingTimeMatrixMinutes(optimizerPoiIds, options.walkingFactor);
+  const useVirtualStart = !requestedStart;
+  const virtualStartIndex = pois.length;
+  const originWalkingMinutes = pois.map((poi) => {
+    if (!options.originCoordinates) return 0;
+    return Math.max(1, Math.round(coordsDistanceKm([
+      [options.originCoordinates.lng, options.originCoordinates.lat],
+      [poi.lng, poi.lat],
+    ]) * 15 * options.walkingFactor));
+  });
+  const travelTimeMatrix = useVirtualStart
+    ? [
+        ...poiTravelMatrix.map((row) => [...row, 0]),
+        [...originWalkingMinutes, 0],
+      ]
+    : poiTravelMatrix;
+  const optimizationProblem: ExactOptimizationProblem = {
+    travelTimeMatrix,
+    visitDurations: [
+      ...pois.map(minimumStay),
+      ...(useVirtualStart ? [0] : []),
+    ],
+    timeWindows: [
+      ...pois.map((poi) => ({
+        openMinutes: poi.operatingHours.opensAtMinutes,
+        closeMinutes: poi.operatingHours.closesAtMinutes,
+      })),
+      ...(useVirtualStart ? [{
+        openMinutes: options.departureTimeMinutes,
+        closeMinutes: options.departureTimeMinutes,
+      }] : []),
+    ],
+    departureTimeMinutes: options.departureTimeMinutes,
+    timeBudgetMinutes: options.timeBudgetMinutes,
+    startIndex: useVirtualStart ? virtualStartIndex : pois.indexOf(requestedStart),
+  };
+  const baselineSolution = solveBaselineOrder(optimizationProblem);
+  const optimalSolution = solveExactTimeWindowRoute(optimizationProblem);
+  const intelligentCandidate = options.preference === "efficiency" ? shortest : scenic;
+
+  const solutionDistance = (solution: ExactOptimizationSolution): number =>
+    solution.order.slice(1).reduce((sum, toIndex, position) => {
+      const fromIndex = solution.order[position];
+      if (useVirtualStart && fromIndex === virtualStartIndex) {
+        if (!options.originCoordinates) return sum;
+        const poi = pois[toIndex];
+        return sum + coordsDistanceKm([
+          [options.originCoordinates.lng, options.originCoordinates.lat],
+          [poi.lng, poi.lat],
+        ]);
+      }
+      const leg = getWalkingMatrixLeg(pois[fromIndex].id, pois[toIndex].id);
+      return sum + (leg?.distanceKm ?? 0);
+    }, 0);
+  const solutionPoiIds = (solution: ExactOptimizationSolution): string[] =>
+    solution.order
+      .filter((index) => index !== virtualStartIndex)
+      .map((index) => pois[index]?.id)
+      .filter((id): id is string => Boolean(id));
+  const summarizeSolution = (
+    kind: "baseline" | "optimal",
+    solution: ExactOptimizationSolution,
+  ): AlgorithmRouteSummary => ({
+    kind,
+    label: kind === "baseline" ? "基准路线" : "最优验证路线",
+    poiIds: solutionPoiIds(solution),
+    distanceKm: solutionDistance(solution),
+    walkingMinutes: Math.round(solution.walkingMinutes),
+    stayMinutes: Math.round(solution.stayMinutes),
+    waitMinutes: Math.round(solution.waitMinutes),
+    totalMinutes: Math.round(solution.totalMinutes),
+    feasible: solution.status === "optimal",
+    engine: kind === "baseline" ? "用户顺序 + 时间窗截断" : "精确枚举（≤5 POI）",
+    note: kind === "baseline"
+      ? "按用户勾选顺序游览，遇到闭馆或超时后截断。"
+      : `穷举 ${solution.exploredOrders} 个可选顺序，以先覆盖更多地点、再缩短总时间为目标。`,
+  });
+  const intelligentSummary: AlgorithmRouteSummary = {
+    kind: "intelligent",
+    label: "智能路线",
+    poiIds: intelligentCandidate.order.map((poi) => poi.id),
+    distanceKm: intelligentCandidate.km,
+    walkingMinutes: intelligentCandidate.walkingMinutes,
+    stayMinutes: intelligentCandidate.stayMinutes.reduce((sum, value) => sum + value, 0),
+    waitMinutes: intelligentCandidate.waitMinutes,
+    totalMinutes: intelligentCandidate.totalMinutes,
+    feasible: true,
+    engine: "多目标规划 + Valhalla 步行矩阵",
+    note: "在时间窗和预算硬约束内，综合天气、体力、文化、语义与体验偏好评分。",
+  };
+  const baselineSummary = summarizeSolution("baseline", baselineSolution);
+  const optimalSummary = summarizeSolution("optimal", optimalSolution);
+  const sameCoverage = intelligentSummary.poiIds.length === optimalSummary.poiIds.length;
+  const comparison: RouteAlgorithmComparison = {
+    baseline: baselineSummary,
+    intelligent: intelligentSummary,
+    optimal: optimalSummary,
+    optimalityGapPercent: sameCoverage && optimalSummary.totalMinutes > 0
+      ? Math.max(0, Math.round(
+          ((intelligentSummary.totalMinutes - optimalSummary.totalMinutes) / optimalSummary.totalMinutes) * 100,
+        ))
+      : null,
+    visitedGap: optimalSummary.poiIds.length - intelligentSummary.poiIds.length,
+    exactValidation: true,
+    exploredOrders: optimalSolution.exploredOrders,
+    objective: "先最大化预算内可完成地点数，再最小化总用时与步行时间",
+  };
 
   const shortestRoute = toRoute(
     "recommend-shortest",
@@ -496,10 +702,12 @@ export function recommendTwoRoutes(
     shortest: {
       ...shortestRoute,
       explanations: explainRoute(shortestRoute, scenicRoute, "shortest", options),
+      algorithmComparison: comparison,
     },
     scenic: {
       ...scenicRoute,
       explanations: explainRoute(scenicRoute, shortestRoute, "scenic", options),
+      algorithmComparison: comparison,
     },
   };
 }

@@ -42,6 +42,13 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Reproducible local AI/routing assets. Download/build scripts and manifests stay tracked.
+/public/models/
+/public/wasm/
+/integrations/data/
+__pycache__/
+*.pyc
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

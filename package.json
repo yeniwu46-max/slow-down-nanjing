@@ -6,14 +6,31 @@
     "dev": "next dev -p 3005 --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:semantic": "vitest run src/lib/semantic",
+    "culture:generate": "tsx tools/generate-culture-graph.ts",
+    "culture:validate": "tsx tools/validate-culture-graph.ts",
+    "culture:stats": "tsx tools/validate-culture-graph.ts",
+    "routing:matrix": "tsx tools/build-walking-matrix.ts",
+    "routing:validate": "vitest run src/lib/routing/walking-matrix.test.ts",
+    "setup:semantic": "node tools/setup-semantic-assets.mjs",
+    "build:embeddings": "tsx tools/build-poi-embeddings.ts",
+    "check:embeddings": "tsx tools/build-poi-embeddings.ts --check",
+    "setup:routing": "powershell -NoProfile -ExecutionPolicy Bypass -File tools/setup-routing-data.ps1",
+    "stack:up": "docker compose -f docker-compose.competition.yml up -d --build",
+    "stack:tools": "docker compose -f docker-compose.competition.yml --profile tools up -d --build",
+    "stack:down": "docker compose -f docker-compose.competition.yml --profile tools down",
+    "health": "node tools/check-integrations.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@huggingface/transformers": "4.3.0",
     "@mediapipe/tasks-vision": "^0.10.17",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.1",
     "clsx": "^2.1.1",
+    "cytoscape": "3.34.3",
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-react": "^8.6.0",
     "fingerpose": "^0.1.0",
@@ -44,6 +61,8 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "tsx": "^4.20.6",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

@@ -4,10 +4,12 @@ import { Sparkles, X } from "lucide-react";
 import { MAP_POIS } from "@/lib/map/pois";
 import type { PlanningOptions } from "@/lib/map/planning";
 import type { MapRoute } from "@/lib/map/types";
+import type { ModelLoadState } from "@/lib/semantic/types";
 import { cn } from "@/lib/utils";
 import { DynamicPlanningControls } from "./dynamic-planning-controls";
 import { PlanningControls } from "./planning-controls";
 import { PlanningResults } from "./planning-results";
+import { SemanticPreferencePanel } from "./semantic-preference-panel";
 
 interface RecommendPanelProps {
   open: boolean;
@@ -18,6 +20,9 @@ interface RecommendPanelProps {
   planningOptions: PlanningOptions;
   replanMessage: string | null;
   weatherError: string | null;
+  semanticQuery: string;
+  semanticModelState: ModelLoadState;
+  semanticAnalyzing: boolean;
   onClose: () => void;
   onToggle: (id: string) => void;
   onPlanningChange: (patch: Partial<PlanningOptions>) => void;
@@ -25,6 +30,8 @@ interface RecommendPanelProps {
   onPickRoute: (route: MapRoute) => void;
   onApplyScenario: (id: NonNullable<PlanningOptions["scenarioId"]>) => void;
   onRefreshWeather: () => void;
+  onSemanticQueryChange: (value: string) => void;
+  onAnalyzeSemantic: () => void;
 }
 
 export function RecommendPanel({
@@ -36,6 +43,9 @@ export function RecommendPanel({
   planningOptions,
   replanMessage,
   weatherError,
+  semanticQuery,
+  semanticModelState,
+  semanticAnalyzing,
   onClose,
   onToggle,
   onPlanningChange,
@@ -43,6 +53,8 @@ export function RecommendPanel({
   onPickRoute,
   onApplyScenario,
   onRefreshWeather,
+  onSemanticQueryChange,
+  onAnalyzeSemantic,
 }: RecommendPanelProps) {
   if (!open) return null;
 
@@ -121,6 +133,17 @@ export function RecommendPanel({
               ))}
             </div>
           </div>
+
+          <SemanticPreferencePanel
+            query={semanticQuery}
+            intent={planningOptions.semanticIntent}
+            modelState={semanticModelState}
+            analyzing={semanticAnalyzing}
+            selectedIds={selectedIds}
+            onQueryChange={onSemanticQueryChange}
+            onAnalyze={onAnalyzeSemantic}
+            onTogglePoi={onToggle}
+          />
 
           <PlanningControls
             options={planningOptions}

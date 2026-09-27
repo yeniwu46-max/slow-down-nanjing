@@ -26,6 +26,7 @@ import { useVisitStore } from "@/lib/map/visit-store";
 import type { MapFilter, MapPoi, MapRoute } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
 import { useWeather } from "@/hooks/use-weather";
+import { useSemanticPreference } from "@/hooks/use-semantic-preference";
 import { MapLibre, type MapLibreHandle } from "./map-libre";
 import { PoiPhotoCarousel } from "./poi-photo-carousel";
 import { RecommendPanel } from "./recommend-panel";
@@ -110,11 +111,17 @@ export function MapView({
   const [recShortest, setRecShortest] = useState<MapRoute | null>(null);
   const [recScenic, setRecScenic] = useState<MapRoute | null>(null);
   const [hasGenerated, setHasGenerated] = useState(false);
+  const [semanticQuery, setSemanticQuery] = useState("");
   const [replanMessage, setReplanMessage] = useState<string | null>(null);
   const [dataUpdatedAt, setDataUpdatedAt] = useState("2026-09-01T08:00:00+08:00");
   const [dataStatus, setDataStatus] = useState("本地场馆与道路样本（非实时）");
   const pendingReasonRef = useRef("首次规划");
   const { weather, error: weatherError, refresh: refreshWeather } = useWeather();
+  const {
+    analyze: analyzeSemantic,
+    analyzing: semanticAnalyzing,
+    modelState: semanticModelState,
+  } = useSemanticPreference();
 
   const states = useVisitStore((s) => s.states);
   const setPoiState = useVisitStore((s) => s.setPoiState);
@@ -248,11 +255,13 @@ export function MapView({
         avoidCrowds: planningOptions.avoidCrowds,
         nightMode: planningOptions.nightMode,
         cultureFocusTags: planningOptions.cultureFocusTags,
+        cultureFocusEntityIds: planningOptions.cultureFocusEntityIds,
         dataUpdatedAt,
         dataStatus,
         originCoordinates: planningOptions.originMode === "current"
           ? planningOptions.currentLocation
           : null,
+        semanticIntent: planningOptions.semanticIntent,
       },
     );
     const calculationMs = Math.max(1, Math.round(performance.now() - startedAt));
@@ -280,6 +289,34 @@ export function MapView({
     setHasGenerated(true);
   }
 
+  async function analyzeSemanticPreference() {
+    try {
+      const intent = await analyzeSemantic(semanticQuery);
+      pendingReasonRef.current = "文本路线偏好变化";
+      setPlanningOptions((current) => ({
+        ...current,
+        ...intent.inferredPatch,
+        cultureFocusTags: intent.inferredPatch.cultureFocusTags?.length
+          ? intent.inferredPatch.cultureFocusTags
+          : current.cultureFocusTags,
+        cultureFocusEntityIds: intent.inferredPatch.cultureFocusEntityIds?.length
+          ? intent.inferredPatch.cultureFocusEntityIds
+          : current.cultureFocusEntityIds,
+        semanticIntent: intent,
+        scenarioId: null,
+      }));
+      setDataUpdatedAt(new Date().toISOString());
+      setDataStatus(
+        intent.provider === "bge-local"
+          ? "本地 BGE 语义模型 + 本地场馆与道路样本（非实时）"
+          : "本地规则兜底 + 本地场馆与道路样本（非实时）",
+      );
+      setReplanMessage(`已理解路线偏好，推荐 ${Math.min(5, intent.matches.length)} 个候选地点，请确认后规划。`);
+    } catch (error) {
+      setReplanMessage(error instanceof Error ? error.message : "路线偏好分析失败，请重试。 ");
+    }
+  }
+
   useEffect(() => {
     if (!hasGenerated) return;
     const timer = window.setTimeout(() => {
@@ -299,6 +336,7 @@ export function MapView({
     });
     setDataUpdatedAt(new Date().toISOString());
     setDataStatus("固定验收场景 + 本地场馆与道路样本（非实时）");
+    setSemanticQuery("");
     setHasGenerated(true);
   }
 
@@ -516,6 +554,9 @@ export function MapView({
         planningOptions={planningOptions}
         replanMessage={replanMessage}
         weatherError={weatherError}
+        semanticQuery={semanticQuery}
+        semanticModelState={semanticModelState}
+        semanticAnalyzing={semanticAnalyzing}
         onClose={() => setRecommendOpen(false)}
         onToggle={togglePick}
         onPlanningChange={updatePlanningOptions}
@@ -523,6 +564,8 @@ export function MapView({
         onPickRoute={pickRecommended}
         onApplyScenario={applyScenario}
         onRefreshWeather={refreshWeather}
+        onSemanticQueryChange={setSemanticQuery}
+        onAnalyzeSemantic={analyzeSemanticPreference}
       />
 
       <button

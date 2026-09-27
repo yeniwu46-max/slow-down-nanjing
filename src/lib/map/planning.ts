@@ -1,5 +1,6 @@
 import type { MapRoute } from "./types";
 import type { WeatherCondition } from "../weather/types";
+import type { SemanticIntent } from "../semantic/types";
 
 export type OriginMode = "poi" | "current";
 export type WalkingAbility = "relaxed" | "balanced" | "active";
@@ -24,6 +25,8 @@ export interface PlanningOptions {
   avoidCrowds: boolean;
   nightMode: boolean;
   cultureFocusTags: string[];
+  cultureFocusEntityIds: string[];
+  semanticIntent: SemanticIntent | null;
   scenarioId: "rain-short" | "culture-closing" | "weekend-night" | null;
 }
 
@@ -46,6 +49,8 @@ export const DEFAULT_PLANNING_OPTIONS: PlanningOptions = {
   avoidCrowds: false,
   nightMode: false,
   cultureFocusTags: [],
+  cultureFocusEntityIds: [],
+  semanticIntent: null,
   scenarioId: null,
 };
 
