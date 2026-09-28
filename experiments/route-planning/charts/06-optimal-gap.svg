@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="智能路线与精确最优路线总时间差距">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">智能路线与精确最优路线总时间差距</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">样本数 56；柱为区间频数</text>
+  <rect x="90" y="125" width="96" height="390" fill="#4b8c74" rx="4"/><text x="138" y="117" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">41</text>
+<rect x="192" y="476.9512195121951" width="96" height="38.048780487804876" fill="#4b8c74" rx="4"/><text x="240" y="468.9512195121951" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">4</text>
+<rect x="294" y="495.9756097560976" width="96" height="19.024390243902438" fill="#4b8c74" rx="4"/><text x="342" y="487.9756097560976" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">2</text>
+<rect x="396" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="444" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="498" y="486.4634146341463" width="96" height="28.536585365853657" fill="#4b8c74" rx="4"/><text x="546" y="478.4634146341463" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">3</text>
+<rect x="600" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="648" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="702" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="750" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="804" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="852" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="906" y="495.9756097560976" width="96" height="19.024390243902438" fill="#4b8c74" rx="4"/><text x="954" y="487.9756097560976" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">2</text>
+<rect x="1008" y="515" width="96" height="0" fill="#4b8c74" rx="4"/><text x="1056" y="507" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e"></text><line x1="90" x2="1110" y1="515" y2="515" stroke="#718078"/><text x="90" y="565" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">0</text><text x="1110" y="565" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">50</text>
+</svg>

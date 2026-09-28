@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="智能路线相对基准路线">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">智能路线相对基准路线</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">距离与总时间仅在完成地点数相同时比较；距离均值接近 0，未夸大为显著改进</text>
+  <text x="258" y="161" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">平均多完成地点</text>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="132" width="32.9476" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="324.9476" y="161" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">0.80 个</text>
+<text x="258" y="239" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">等地点数距离改进</text>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="210" width="21.0289" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="313.0289" y="239" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">0.51%</text>
+<text x="258" y="317" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">文化覆盖提升</text>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="288" width="654.5363" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="946.5363" y="317" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">15.96 pp</text>
+</svg>

@@ -1,0 +1,950 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-28T07:02:31.720Z",
+  "experiment": {
+    "scenarioCount": 60,
+    "configurationCount": 4,
+    "functionalRunCount": 240,
+    "oracleFeasibleCount": 56,
+    "oracleInfeasibleCount": 4,
+    "performanceWarmupCount": 30,
+    "performanceSampleCount": 1200,
+    "performanceRepetitionsPerScenario": 20
+  },
+  "environment": {
+    "os": "Windows_NT 10.0.22631 x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i7-13650HX",
+    "logicalCpuCount": 20,
+    "nodeVersion": "v24.14.1",
+    "gitSha": "be18e94c5fd943b9de77cb13f07f08b83225edcc",
+    "walkingMatrixHash": "8ae7703cbc0b0e421da8ca090a168b0bda6e6fbb634ed591f8516de8508f67f6",
+    "walkingMatrixSourceHash": "1bc4f8e4b919605e2ba98765422a89dd3de4e57aed674204702e159ed94c0298",
+    "walkingMatrixGeneratedAt": "2026-09-27T08:27:22.676Z",
+    "cultureGraphVersion": "1.0.0",
+    "cultureGraphGeneratedAt": "2026-09-27T00:00:00+08:00",
+    "bgeModelId": "bge-small-zh-v1.5",
+    "bgeRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+    "poiEmbeddingSourceHash": "9bd00bfb4e0451f1ee66e88e8019b1c8c38c842f048d983e06a51171252975f8"
+  },
+  "semanticPerformance": {
+    "coldLoadMs": 139.692,
+    "warmInferenceMs": {
+      "count": 12,
+      "mean": 3.8002,
+      "median": 3.669,
+      "standardDeviation": 0.569,
+      "q1": 3.4355,
+      "q3": 4.1815,
+      "iqr": 0.746,
+      "p95": 4.7203,
+      "min": 2.994,
+      "max": 4.778
+    }
+  },
+  "configurations": {
+    "full": {
+      "scenarioCount": 60,
+      "oracleFeasibleCount": 56,
+      "oracleInfeasibleCount": 4,
+      "generatedCount": 56,
+      "feasibleGenerationRatePercent": 100,
+      "correctRejectionRatePercent": 100,
+      "overBudgetViolationRatePercent": 0,
+      "routeClosingViolationRatePercent": 0,
+      "stopClosingViolationRatePercent": 0,
+      "closedPoiViolationRatePercent": 0,
+      "metrics": {
+        "completedPoiCount": {
+          "count": 56,
+          "mean": 2.8571,
+          "median": 3,
+          "standardDeviation": 1.135,
+          "q1": 2,
+          "q3": 4,
+          "iqr": 2,
+          "p95": 5,
+          "min": 1,
+          "max": 5
+        },
+        "distanceKm": {
+          "count": 56,
+          "mean": 3.8446,
+          "median": 3.2,
+          "standardDeviation": 2.9642,
+          "q1": 1.1477,
+          "q3": 6.7475,
+          "iqr": 5.5998,
+          "p95": 8.3122,
+          "min": 0,
+          "max": 9.807
+        },
+        "walkingMinutes": {
+          "count": 56,
+          "mean": 47.4107,
+          "median": 39.5,
+          "standardDeviation": 35.8242,
+          "q1": 17,
+          "q3": 77.75,
+          "iqr": 60.75,
+          "p95": 105.5,
+          "min": 0,
+          "max": 126
+        },
+        "stayMinutes": {
+          "count": 56,
+          "mean": 48.6964,
+          "median": 48,
+          "standardDeviation": 18.9765,
+          "q1": 35,
+          "q3": 65,
+          "iqr": 30,
+          "p95": 76.5,
+          "min": 15,
+          "max": 86
+        },
+        "waitMinutes": {
+          "count": 56,
+          "mean": 2.8393,
+          "median": 0,
+          "standardDeviation": 11.8134,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "p95": 9.75,
+          "min": 0,
+          "max": 60
+        },
+        "totalMinutes": {
+          "count": 56,
+          "mean": 98.9464,
+          "median": 106,
+          "standardDeviation": 52.6555,
+          "q1": 53,
+          "q3": 139,
+          "iqr": 86,
+          "p95": 180,
+          "min": 15,
+          "max": 180
+        },
+        "cultureCoveragePercent": {
+          "count": 56,
+          "mean": 72.3929,
+          "median": 75,
+          "standardDeviation": 22.5249,
+          "q1": 57,
+          "q3": 86,
+          "iqr": 29,
+          "p95": 100,
+          "min": 25,
+          "max": 100
+        },
+        "indoorStaySharePercent": {
+          "count": 56,
+          "mean": 41.1818,
+          "median": 43.4166,
+          "standardDeviation": 26.085,
+          "q1": 26.0101,
+          "q3": 57.1429,
+          "iqr": 31.1328,
+          "p95": 76.3158,
+          "min": 0,
+          "max": 100
+        },
+        "shelterScore": {
+          "count": 56,
+          "mean": 54.375,
+          "median": 62,
+          "standardDeviation": 19.9678,
+          "q1": 52,
+          "q3": 66,
+          "iqr": 14,
+          "p95": 66,
+          "min": 0,
+          "max": 66
+        },
+        "scenicScore": {
+          "count": 56,
+          "mean": 69.5,
+          "median": 80,
+          "standardDeviation": 27.1842,
+          "q1": 60,
+          "q3": 88,
+          "iqr": 28,
+          "p95": 88,
+          "min": 0,
+          "max": 88
+        },
+        "semanticMatchScore": {
+          "count": 56,
+          "mean": 71.3089,
+          "median": 73.5,
+          "standardDeviation": 19.0527,
+          "q1": 61,
+          "q3": 84.65,
+          "iqr": 23.65,
+          "p95": 94.875,
+          "min": 15.5,
+          "max": 100
+        },
+        "calculationMs": {
+          "count": 56,
+          "mean": 4.0783,
+          "median": 3.3707,
+          "standardDeviation": 3.3271,
+          "q1": 1.8535,
+          "q3": 4.6574,
+          "iqr": 2.804,
+          "p95": 9.5535,
+          "min": 1.0616,
+          "max": 16.5483
+        }
+      }
+    },
+    "noBge": {
+      "scenarioCount": 60,
+      "oracleFeasibleCount": 56,
+      "oracleInfeasibleCount": 4,
+      "generatedCount": 56,
+      "feasibleGenerationRatePercent": 100,
+      "correctRejectionRatePercent": 100,
+      "overBudgetViolationRatePercent": 0,
+      "routeClosingViolationRatePercent": 0,
+      "stopClosingViolationRatePercent": 0,
+      "closedPoiViolationRatePercent": 0,
+      "metrics": {
+        "completedPoiCount": {
+          "count": 56,
+          "mean": 2.8571,
+          "median": 3,
+          "standardDeviation": 1.135,
+          "q1": 2,
+          "q3": 4,
+          "iqr": 2,
+          "p95": 5,
+          "min": 1,
+          "max": 5
+        },
+        "distanceKm": {
+          "count": 56,
+          "mean": 3.7666,
+          "median": 3.2,
+          "standardDeviation": 2.9185,
+          "q1": 1.1477,
+          "q3": 6.1595,
+          "iqr": 5.0118,
+          "p95": 8.3782,
+          "min": 0,
+          "max": 9.807
+        },
+        "walkingMinutes": {
+          "count": 56,
+          "mean": 46.5536,
+          "median": 39.5,
+          "standardDeviation": 35.4298,
+          "q1": 17,
+          "q3": 77,
+          "iqr": 60,
+          "p95": 105.5,
+          "min": 0,
+          "max": 126
+        },
+        "stayMinutes": {
+          "count": 56,
+          "mean": 48.75,
+          "median": 48,
+          "standardDeviation": 18.924,
+          "q1": 35,
+          "q3": 65,
+          "iqr": 30,
+          "p95": 76.5,
+          "min": 15,
+          "max": 86
+        },
+        "waitMinutes": {
+          "count": 56,
+          "mean": 2.8393,
+          "median": 0,
+          "standardDeviation": 11.8134,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "p95": 9.75,
+          "min": 0,
+          "max": 60
+        },
+        "totalMinutes": {
+          "count": 56,
+          "mean": 98.1429,
+          "median": 100.5,
+          "standardDeviation": 52.3886,
+          "q1": 53,
+          "q3": 142,
+          "iqr": 89,
+          "p95": 180,
+          "min": 15,
+          "max": 180
+        },
+        "cultureCoveragePercent": {
+          "count": 56,
+          "mean": 71.6429,
+          "median": 75,
+          "standardDeviation": 22.9192,
+          "q1": 57,
+          "q3": 86,
+          "iqr": 29,
+          "p95": 100,
+          "min": 25,
+          "max": 100
+        },
+        "indoorStaySharePercent": {
+          "count": 56,
+          "mean": 41.9904,
+          "median": 43.4166,
+          "standardDeviation": 27.1907,
+          "q1": 26.0101,
+          "q3": 58.7355,
+          "iqr": 32.7255,
+          "p95": 82.2369,
+          "min": 0,
+          "max": 100
+        },
+        "shelterScore": {
+          "count": 56,
+          "mean": 54.4464,
+          "median": 62,
+          "standardDeviation": 19.9654,
+          "q1": 52.75,
+          "q3": 66,
+          "iqr": 13.25,
+          "p95": 66,
+          "min": 0,
+          "max": 66
+        },
+        "scenicScore": {
+          "count": 56,
+          "mean": 69.6607,
+          "median": 80,
+          "standardDeviation": 27.1436,
+          "q1": 62.25,
+          "q3": 88,
+          "iqr": 25.75,
+          "p95": 88,
+          "min": 0,
+          "max": 88
+        },
+        "semanticMatchScore": {
+          "count": 56,
+          "mean": 69.4756,
+          "median": 72.2083,
+          "standardDeviation": 19.1023,
+          "q1": 60.55,
+          "q3": 83.0625,
+          "iqr": 22.5125,
+          "p95": 92.5,
+          "min": 15.5,
+          "max": 99.5
+        },
+        "calculationMs": {
+          "count": 56,
+          "mean": 4.0713,
+          "median": 3.1191,
+          "standardDeviation": 3.2617,
+          "q1": 1.8091,
+          "q3": 5.0337,
+          "iqr": 3.2246,
+          "p95": 9.7252,
+          "min": 0.9487,
+          "max": 15.9161
+        }
+      }
+    },
+    "noKg": {
+      "scenarioCount": 60,
+      "oracleFeasibleCount": 56,
+      "oracleInfeasibleCount": 4,
+      "generatedCount": 56,
+      "feasibleGenerationRatePercent": 100,
+      "correctRejectionRatePercent": 100,
+      "overBudgetViolationRatePercent": 0,
+      "routeClosingViolationRatePercent": 0,
+      "stopClosingViolationRatePercent": 0,
+      "closedPoiViolationRatePercent": 0,
+      "metrics": {
+        "completedPoiCount": {
+          "count": 56,
+          "mean": 2.8571,
+          "median": 3,
+          "standardDeviation": 1.135,
+          "q1": 2,
+          "q3": 4,
+          "iqr": 2,
+          "p95": 5,
+          "min": 1,
+          "max": 5
+        },
+        "distanceKm": {
+          "count": 56,
+          "mean": 3.7798,
+          "median": 3.2,
+          "standardDeviation": 2.8834,
+          "q1": 1.1477,
+          "q3": 6.2553,
+          "iqr": 5.1075,
+          "p95": 8.3122,
+          "min": 0,
+          "max": 9.034
+        },
+        "walkingMinutes": {
+          "count": 56,
+          "mean": 46.6429,
+          "median": 39.5,
+          "standardDeviation": 34.8917,
+          "q1": 17,
+          "q3": 77,
+          "iqr": 60,
+          "p95": 105.5,
+          "min": 0,
+          "max": 112
+        },
+        "stayMinutes": {
+          "count": 56,
+          "mean": 48.6607,
+          "median": 48,
+          "standardDeviation": 18.8808,
+          "q1": 35,
+          "q3": 65,
+          "iqr": 30,
+          "p95": 76.5,
+          "min": 15,
+          "max": 86
+        },
+        "waitMinutes": {
+          "count": 56,
+          "mean": 2.8393,
+          "median": 0,
+          "standardDeviation": 11.8134,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "p95": 9.75,
+          "min": 0,
+          "max": 60
+        },
+        "totalMinutes": {
+          "count": 56,
+          "mean": 98.1429,
+          "median": 100.5,
+          "standardDeviation": 52.2349,
+          "q1": 53,
+          "q3": 139.75,
+          "iqr": 86.75,
+          "p95": 180,
+          "min": 15,
+          "max": 180
+        },
+        "cultureCoveragePercent": {
+          "count": 56,
+          "mean": 70.375,
+          "median": 73,
+          "standardDeviation": 21.8187,
+          "q1": 57,
+          "q3": 86,
+          "iqr": 29,
+          "p95": 100,
+          "min": 25,
+          "max": 100
+        },
+        "indoorStaySharePercent": {
+          "count": 56,
+          "mean": 41.0005,
+          "median": 47.093,
+          "standardDeviation": 26.5535,
+          "q1": 21.3542,
+          "q3": 57.1429,
+          "iqr": 35.7887,
+          "p95": 76.3158,
+          "min": 0,
+          "max": 100
+        },
+        "shelterScore": {
+          "count": 56,
+          "mean": 54.4286,
+          "median": 63.5,
+          "standardDeviation": 19.9953,
+          "q1": 52,
+          "q3": 66,
+          "iqr": 14,
+          "p95": 66,
+          "min": 0,
+          "max": 66
+        },
+        "scenicScore": {
+          "count": 56,
+          "mean": 69.625,
+          "median": 83,
+          "standardDeviation": 27.2467,
+          "q1": 60,
+          "q3": 88,
+          "iqr": 28,
+          "p95": 88,
+          "min": 0,
+          "max": 88
+        },
+        "semanticMatchScore": {
+          "count": 56,
+          "mean": 71.6869,
+          "median": 73.5,
+          "standardDeviation": 18.6576,
+          "q1": 63.0208,
+          "q3": 84.05,
+          "iqr": 21.0292,
+          "p95": 94.875,
+          "min": 15.5,
+          "max": 100
+        },
+        "calculationMs": {
+          "count": 56,
+          "mean": 3.9869,
+          "median": 3.0085,
+          "standardDeviation": 3.3052,
+          "q1": 1.5429,
+          "q3": 5.2123,
+          "iqr": 3.6694,
+          "p95": 9.2037,
+          "min": 0.8809,
+          "max": 16.389
+        }
+      }
+    },
+    "noWeather": {
+      "scenarioCount": 60,
+      "oracleFeasibleCount": 56,
+      "oracleInfeasibleCount": 4,
+      "generatedCount": 56,
+      "feasibleGenerationRatePercent": 100,
+      "correctRejectionRatePercent": 100,
+      "overBudgetViolationRatePercent": 0,
+      "routeClosingViolationRatePercent": 0,
+      "stopClosingViolationRatePercent": 0,
+      "closedPoiViolationRatePercent": 0,
+      "metrics": {
+        "completedPoiCount": {
+          "count": 56,
+          "mean": 2.8571,
+          "median": 3,
+          "standardDeviation": 1.135,
+          "q1": 2,
+          "q3": 4,
+          "iqr": 2,
+          "p95": 5,
+          "min": 1,
+          "max": 5
+        },
+        "distanceKm": {
+          "count": 56,
+          "mean": 3.7832,
+          "median": 3.2,
+          "standardDeviation": 2.8749,
+          "q1": 1.1477,
+          "q3": 6.4487,
+          "iqr": 5.301,
+          "p95": 8.0195,
+          "min": 0,
+          "max": 8.963
+        },
+        "walkingMinutes": {
+          "count": 56,
+          "mean": 46.5714,
+          "median": 39.5,
+          "standardDeviation": 34.4968,
+          "q1": 17,
+          "q3": 77,
+          "iqr": 60,
+          "p95": 101.25,
+          "min": 0,
+          "max": 112
+        },
+        "stayMinutes": {
+          "count": 56,
+          "mean": 48.75,
+          "median": 48,
+          "standardDeviation": 19.1627,
+          "q1": 35,
+          "q3": 65,
+          "iqr": 30,
+          "p95": 77.25,
+          "min": 15,
+          "max": 86
+        },
+        "waitMinutes": {
+          "count": 56,
+          "mean": 2.8393,
+          "median": 0,
+          "standardDeviation": 11.8134,
+          "q1": 0,
+          "q3": 0,
+          "iqr": 0,
+          "p95": 9.75,
+          "min": 0,
+          "max": 60
+        },
+        "totalMinutes": {
+          "count": 56,
+          "mean": 98.1607,
+          "median": 106,
+          "standardDeviation": 52.008,
+          "q1": 53,
+          "q3": 136.5,
+          "iqr": 83.5,
+          "p95": 180,
+          "min": 15,
+          "max": 180
+        },
+        "cultureCoveragePercent": {
+          "count": 56,
+          "mean": 72.4286,
+          "median": 75,
+          "standardDeviation": 22.789,
+          "q1": 57,
+          "q3": 86.5,
+          "iqr": 29.5,
+          "p95": 100,
+          "min": 25,
+          "max": 100
+        },
+        "indoorStaySharePercent": {
+          "count": 56,
+          "mean": 40.2062,
+          "median": 44.186,
+          "standardDeviation": 24.1282,
+          "q1": 26.0101,
+          "q3": 57.1429,
+          "iqr": 31.1328,
+          "p95": 76.3158,
+          "min": 0,
+          "max": 76.3158
+        },
+        "shelterScore": {
+          "count": 56,
+          "mean": 54.2679,
+          "median": 61,
+          "standardDeviation": 19.9477,
+          "q1": 52,
+          "q3": 66,
+          "iqr": 14,
+          "p95": 66,
+          "min": 0,
+          "max": 66
+        },
+        "scenicScore": {
+          "count": 56,
+          "mean": 69.25,
+          "median": 77.5,
+          "standardDeviation": 27.1556,
+          "q1": 60,
+          "q3": 88,
+          "iqr": 28,
+          "p95": 88,
+          "min": 0,
+          "max": 88
+        },
+        "semanticMatchScore": {
+          "count": 56,
+          "mean": 72.6601,
+          "median": 75.6,
+          "standardDeviation": 19.3643,
+          "q1": 62.6875,
+          "q3": 87.1875,
+          "iqr": 24.5,
+          "p95": 98,
+          "min": 15.5,
+          "max": 100
+        },
+        "calculationMs": {
+          "count": 56,
+          "mean": 3.9208,
+          "median": 2.9127,
+          "standardDeviation": 3.0519,
+          "q1": 1.8523,
+          "q3": 4.791,
+          "iqr": 2.9386,
+          "p95": 9.6765,
+          "min": 0.9719,
+          "max": 15.3146
+        }
+      }
+    }
+  },
+  "baselineComparison": {
+    "completionCountDifference": {
+      "count": 56,
+      "mean": 0.8036,
+      "median": 1,
+      "standardDeviation": 0.9228,
+      "q1": 0,
+      "q3": 1,
+      "iqr": 1,
+      "p95": 3,
+      "min": 0,
+      "max": 3,
+      "wins": 30,
+      "ties": 26,
+      "losses": 0,
+      "bootstrapMean95Ci": [
+        0.5714,
+        1.0536
+      ]
+    },
+    "equalCompletedPoiScenarioCount": 26,
+    "distanceImprovementPercent": {
+      "count": 22,
+      "mean": 0.5129,
+      "median": 0,
+      "standardDeviation": 30.2678,
+      "q1": -6.4538,
+      "q3": 8.2533,
+      "iqr": 14.7071,
+      "p95": 59.8121,
+      "min": -65.5378,
+      "max": 69.2174,
+      "wins": 7,
+      "ties": 8,
+      "losses": 7,
+      "bootstrapMean95Ci": [
+        -11.6805,
+        13.0572
+      ]
+    },
+    "totalTimeImprovementPercent": {
+      "count": 26,
+      "mean": -0.618,
+      "median": 0,
+      "standardDeviation": 13.9915,
+      "q1": -0.9505,
+      "q3": 4.1153,
+      "iqr": 5.0658,
+      "p95": 20.921,
+      "min": -33.3333,
+      "max": 33.7349,
+      "wins": 8,
+      "ties": 10,
+      "losses": 8,
+      "bootstrapMean95Ci": [
+        -6.0059,
+        4.6158
+      ]
+    },
+    "cultureCoveragePercentagePointDifference": {
+      "count": 56,
+      "mean": 15.9643,
+      "median": 14,
+      "standardDeviation": 20.2807,
+      "q1": 0,
+      "q3": 29,
+      "iqr": 29,
+      "p95": 50,
+      "min": -25,
+      "max": 75,
+      "wins": 31,
+      "ties": 23,
+      "losses": 2,
+      "bootstrapMean95Ci": [
+        10.9103,
+        21.4826
+      ]
+    },
+    "cultureCoverageRelativeImprovementPercent": {
+      "count": 51,
+      "mean": 29.5568,
+      "median": 17.3333,
+      "standardDeviation": 45.9242,
+      "q1": 0,
+      "q3": 49.5765,
+      "iqr": 49.5765,
+      "p95": 100,
+      "min": -25,
+      "max": 200,
+      "wins": 26,
+      "ties": 23,
+      "losses": 2,
+      "bootstrapMean95Ci": [
+        18.0648,
+        42.9718
+      ]
+    }
+  },
+  "optimalComparison": {
+    "visitedGap": {
+      "count": 56,
+      "mean": 0,
+      "median": 0,
+      "standardDeviation": 0,
+      "q1": 0,
+      "q3": 0,
+      "iqr": 0,
+      "p95": 0,
+      "min": 0,
+      "max": 0
+    },
+    "totalTimeGapMinutesForEqualCoverage": {
+      "count": 56,
+      "mean": 5.9107,
+      "median": 0,
+      "standardDeviation": 11.2141,
+      "q1": 0,
+      "q3": 5,
+      "iqr": 5,
+      "p95": 32,
+      "min": 0,
+      "max": 44
+    },
+    "exactMatchCount": 31
+  },
+  "ablations": {
+    "noBge": {
+      "semanticMatchScoreDifference": {
+        "count": 56,
+        "mean": 1.8333,
+        "median": 0,
+        "standardDeviation": 8.8297,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 8.75,
+        "min": 0,
+        "max": 62,
+        "wins": 4,
+        "ties": 52,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0.1131,
+          4.5476
+        ]
+      }
+    },
+    "noKg": {
+      "cultureCoveragePercentagePointDifference": {
+        "count": 56,
+        "mean": 2.0179,
+        "median": 0,
+        "standardDeviation": 6.2129,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 16.25,
+        "min": 0,
+        "max": 29,
+        "wins": 6,
+        "ties": 50,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0.5536,
+          3.8036
+        ]
+      },
+      "focusedThemeCountDifference": {
+        "count": 56,
+        "mean": 0.0179,
+        "median": 0,
+        "standardDeviation": 0.1336,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 0,
+        "min": 0,
+        "max": 1,
+        "wins": 1,
+        "ties": 55,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0,
+          0.0536
+        ]
+      }
+    },
+    "noWeather": {
+      "rainyIndoorSharePercentagePointDifference": {
+        "count": 12,
+        "mean": 8.3333,
+        "median": 0,
+        "standardDeviation": 19.4625,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 50,
+        "min": 0,
+        "max": 50,
+        "wins": 2,
+        "ties": 10,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0,
+          20.8333
+        ]
+      },
+      "rainyShelterScoreDifference": {
+        "count": 12,
+        "mean": 0,
+        "median": 0,
+        "standardDeviation": 0,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 0,
+        "min": 0,
+        "max": 0,
+        "wins": 0,
+        "ties": 12,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0,
+          0
+        ]
+      },
+      "sunnyScenicScoreDifference": {
+        "count": 12,
+        "mean": 1.1667,
+        "median": 0,
+        "standardDeviation": 2.8551,
+        "q1": 0,
+        "q3": 0,
+        "iqr": 0,
+        "p95": 6.8,
+        "min": 0,
+        "max": 9,
+        "wins": 2,
+        "ties": 10,
+        "losses": 0,
+        "bootstrapMean95Ci": [
+          0,
+          3
+        ]
+      }
+    }
+  },
+  "performance": {
+    "count": 1200,
+    "mean": 2.9715,
+    "median": 2.5315,
+    "standardDeviation": 2.4458,
+    "q1": 1.3291,
+    "q3": 3.6615,
+    "iqr": 2.3323,
+    "p95": 8.1102,
+    "min": 0.0009,
+    "max": 15.3953,
+    "over500Count": 0,
+    "over500RatePercent": 0,
+    "thresholdMs": 500,
+    "gateP95Passed": true,
+    "gateOver500RatePassed": true
+  },
+  "interpretationPolicy": {
+    "fixedEngineeringBenchmark": true,
+    "pValuesUsed": false,
+    "pairedBootstrapIterations": 10000,
+    "pairedBootstrapSeed": 20260928,
+    "distanceAndTimeImprovementRequiresEqualCompletedPoiCount": true,
+    "liveDataClaimed": false
+  }
+}

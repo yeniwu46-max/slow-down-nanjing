@@ -1,0 +1,144 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>路线规划算法对照实验报告</title><style>
+    @page { size: A4; margin: 12mm 13mm 13mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #21362f; font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; background: #eef0ea; }
+    .page { width: 100%; min-height: 270mm; background: #fffefa; padding: 13mm 14mm; page-break-after: always; position: relative; overflow: hidden; }
+    .page:last-child { page-break-after: auto; }
+    h1 { font-size: 34px; margin: 0 0 12px; color: #173d31; letter-spacing: .03em; }
+    h2 { font-size: 25px; margin: 0 0 16px; color: #235b49; border-bottom: 2px solid #d7ded7; padding-bottom: 8px; }
+    h3 { font-size: 17px; color: #315f50; margin: 15px 0 7px; }
+    p, li { font-size: 12.5px; line-height: 1.75; }
+    .eyebrow { color: #9b6e34; font-weight: 700; letter-spacing: .16em; margin-bottom: 12px; }
+    .lead { font-size: 17px; line-height: 1.8; max-width: 88%; }
+    .meta { margin-top: 28px; padding: 14px 18px; background: #f0f3ed; border-left: 5px solid #b68a52; font-size: 12px; line-height: 1.8; }
+    .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+    .metric { padding: 15px; border-radius: 14px; background: #edf3ef; border: 1px solid #d8e2dc; }
+    .metric span, .metric small { display: block; color: #63776f; }
+    .metric strong { display: block; font-size: 27px; color: #1f674f; margin: 6px 0; }
+    .metric small { font-size: 10px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .card { border: 1px solid #dce2dd; border-radius: 13px; padding: 13px 15px; background: #fff; }
+    .callout { background: #f8f0e5; border-left: 5px solid #b77b38; padding: 12px 16px; margin: 14px 0; font-size: 12px; line-height: 1.7; }
+    figure { margin: 10px 0 0; }
+    figure svg { width: 100%; height: auto; display: block; }
+    figcaption { text-align: center; color: #66756f; font-size: 10px; margin-top: 5px; }
+    table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+    th, td { padding: 7px; border-bottom: 1px solid #dde2de; text-align: left; vertical-align: top; }
+    th { color: #315f50; background: #eef3ef; }
+    code { font-family: Consolas, monospace; background: #edf0ec; padding: 1px 4px; border-radius: 4px; }
+    .footer { position: absolute; bottom: 8mm; left: 14mm; right: 14mm; display: flex; justify-content: space-between; color: #89958f; font-size: 9px; }
+  </style></head><body>
+  <section class="page"><div class="eyebrow">数字媒体竞赛 · 技术验证报告</div><h1>路线规划算法<br/>对照实验报告</h1><p class="lead">以 60 套固定南京文旅场景，统一验证基准路线、智能路线与精确最优路线，并通过 BGE、文化知识图谱和天气规则的单因素消融，回答“系统是否可行、为何更智能、能否稳定复现”。</p><div class="metrics"><div class="metric"><span>固定场景</span><strong>60</strong><small>12 个模板 × 5 种条件</small></div><div class="metric"><span>功能实验</span><strong>240</strong><small>Full + 三组消融</small></div><div class="metric"><span>性能样本</span><strong>1,200</strong><small>预热后每场景 20 次</small></div><div class="metric"><span>重算 P95</span><strong>8.11ms</strong><small>验收阈值 &lt; 500ms</small></div></div><div class="meta">生成时间：2026-09-28T07:02:31.720Z<br/>Git SHA：be18e94c5fd943b9de77cb13f07f08b83225edcc<br/>固定种子：20260928</div><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>1 / 9</span></div></section>
+  <section class="page"><h2>1. 实验问题与算法系统</h2><div class="grid"><div class="card"><h3>基准路线</h3><p>按用户勾选顺序前进，遇到开放时间或预算约束后截断。它代表没有多目标智能评分时的朴素方案。</p></div><div class="card"><h3>智能路线</h3><p>在预算、时间窗和临时关闭硬约束内，联合真实步行矩阵、BGE 语义、文化图谱覆盖、天气、景观、拥挤与夜游条件。</p></div><div class="card"><h3>最优验证路线</h3><p>在 ≤5 POI 条件下精确枚举全部子集与顺序，先最大化完成地点数，再最小化总时间与步行时间。</p></div><div class="card"><h3>三组单因素消融</h3><p>No-BGE、No-KG、No-Weather 每次只移除一项决策贡献，硬约束与后验指标评估保持不变。</p></div></div><h3>主要实验问题</h3><ol><li>系统能否对可行情形稳定生成路线，并正确拒绝不可行情形？</li><li>智能路线是否在不减少完成地点数的前提下改善体验与文化覆盖？</li><li>三项智能模块分别贡献了什么，是否存在无改善或负结果？</li><li>动态重算能否稳定低于 500ms？</li></ol><div class="callout">“可行”不读取路线对象自带标记，而是由独立评估器重新检查总预算、每站离馆时刻和临时关闭地点。</div><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>2 / 9</span></div></section>
+  <section class="page"><h2>2. 固定场景与统计口径</h2><p>12 个主题模板覆盖六朝、民国、秦淮城南、明城墙、钟山、博物馆、佛教、湖泊慢游、低体力、无障碍、夜游和跨区综合路线；每个模板固定组合 5 种出行条件。</p><table><thead><tr><th>条件</th><th>关键设置</th><th>检验目标</th></tr></thead><tbody><tr><td>雨天低体力短时</td><td>45–60 分钟、雨天、低体力</td><td>室内与遮蔽适配</td></tr><tr><td>早晨等开馆</td><td>08:00 出发、固定起点</td><td>等待时间与时间窗</td></tr><tr><td>下午临近闭馆</td><td>16:10 出发、临时关闭点</td><td>闭馆与正确拒绝</td></tr><tr><td>日间文化偏好</td><td>180 分钟、自然语言需求</td><td>BGE 与图谱覆盖</td></tr><tr><td>周末傍晚夜游</td><td>17:30、避拥挤、夜游</td><td>夜间开放与拥挤成本</td></tr></tbody></table><div class="metrics"><div class="metric"><span>精确判定可行</span><strong>56</strong><small>生成率的分母</small></div><div class="metric"><span>故意不可行</span><strong>4</strong><small>正确拒绝率的分母</small></div><div class="metric"><span>Bootstrap</span><strong>10,000</strong><small>配对差均值 95% 区间</small></div><div class="metric"><span>p 值</span><strong>不使用</strong><small>固定工程基准，非抽样研究</small></div></div><p>距离与总时间改进率统一为 <code>(基准−智能)/基准×100%</code>，且仅在完成地点数相同时计算。文化覆盖同时报告百分点差与相对变化；基准为 0 时不计算相对变化。</p><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>3 / 9</span></div></section>
+  <section class="page"><h2>3. 可行性与硬约束结果</h2><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="硬约束与可用性验收">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">硬约束与可用性验收</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">分母分别为 56 个可行场景、4 个不可行场景及已生成路线</text>
+  <text x="258" y="161" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">可行路线生成率</text>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="161" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="239" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">不可行场景正确拒绝率</text>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="239" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="317" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">无超预算路线占比</text>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="317" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="395" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">无闭馆违规路线占比</text>
+      <rect x="280" y="366" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="366" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="395" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+</svg><figcaption>图 1　可行生成、正确拒绝及硬约束合规率</figcaption></figure><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>4 / 9</span></div></section>
+  <section class="page"><h2>4. 基准路线与智能路线</h2><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="智能路线相对基准路线">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">智能路线相对基准路线</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">距离与总时间仅在完成地点数相同时比较；距离均值接近 0，未夸大为显著改进</text>
+  <text x="258" y="161" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">平均多完成地点</text>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="132" width="32.9476" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="324.9476" y="161" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">0.80 个</text>
+<text x="258" y="239" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">等地点数距离改进</text>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="210" width="21.0289" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="313.0289" y="239" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">0.51%</text>
+<text x="258" y="317" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">文化覆盖提升</text>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="288" width="654.5363" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="946.5363" y="317" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">15.96 pp</text>
+</svg><figcaption>图 2　智能路线相对基准路线的主要变化</figcaption></figure><div class="callout">完成地点数平均增加 0.80 个；文化覆盖平均增加 15.96 个百分点。等地点数时，距离和总时间的平均改进分别为 0.51% 与 -0.62%，其 bootstrap 区间跨越 0，因此不宣称稳定缩短。</div><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>5 / 9</span></div></section>
+  <section class="page"><h2>5. 文化覆盖与精确最优验证</h2><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="Full 配置文化覆盖率分布">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">Full 配置文化覆盖率分布</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">样本数 56；柱为区间频数</text>
+  <rect x="90" y="515" width="96" height="0" fill="#4b8c74" rx="4"/><text x="138" y="507" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e"></text>
+<rect x="192" y="515" width="96" height="0" fill="#4b8c74" rx="4"/><text x="240" y="507" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e"></text>
+<rect x="294" y="411" width="96" height="104" fill="#4b8c74" rx="4"/><text x="342" y="403" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">4</text>
+<rect x="396" y="489" width="96" height="26" fill="#4b8c74" rx="4"/><text x="444" y="481" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="498" y="385" width="96" height="130" fill="#4b8c74" rx="4"/><text x="546" y="377" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">5</text>
+<rect x="600" y="333" width="96" height="182" fill="#4b8c74" rx="4"/><text x="648" y="325" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">7</text>
+<rect x="702" y="385" width="96" height="130" fill="#4b8c74" rx="4"/><text x="750" y="377" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">5</text>
+<rect x="804" y="333" width="96" height="182" fill="#4b8c74" rx="4"/><text x="852" y="325" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">7</text>
+<rect x="906" y="125" width="96" height="390" fill="#4b8c74" rx="4"/><text x="954" y="117" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">15</text>
+<rect x="1008" y="203" width="96" height="312" fill="#4b8c74" rx="4"/><text x="1056" y="195" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">12</text><line x1="90" x2="1110" y1="515" y2="515" stroke="#718078"/><text x="90" y="565" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">0</text><text x="1110" y="565" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">100</text>
+</svg><figcaption>图 3　Full 配置下文化主题覆盖率分布</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="智能路线与精确最优路线总时间差距">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">智能路线与精确最优路线总时间差距</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">样本数 56；柱为区间频数</text>
+  <rect x="90" y="125" width="96" height="390" fill="#4b8c74" rx="4"/><text x="138" y="117" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">41</text>
+<rect x="192" y="476.9512195121951" width="96" height="38.048780487804876" fill="#4b8c74" rx="4"/><text x="240" y="468.9512195121951" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">4</text>
+<rect x="294" y="495.9756097560976" width="96" height="19.024390243902438" fill="#4b8c74" rx="4"/><text x="342" y="487.9756097560976" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">2</text>
+<rect x="396" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="444" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="498" y="486.4634146341463" width="96" height="28.536585365853657" fill="#4b8c74" rx="4"/><text x="546" y="478.4634146341463" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">3</text>
+<rect x="600" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="648" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="702" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="750" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="804" y="505.4878048780488" width="96" height="9.512195121951219" fill="#4b8c74" rx="4"/><text x="852" y="497.4878048780488" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">1</text>
+<rect x="906" y="495.9756097560976" width="96" height="19.024390243902438" fill="#4b8c74" rx="4"/><text x="954" y="487.9756097560976" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e">2</text>
+<rect x="1008" y="515" width="96" height="0" fill="#4b8c74" rx="4"/><text x="1056" y="507" text-anchor="middle" font-family="Arial" font-size="13" fill="#31463e"></text><line x1="90" x2="1110" y1="515" y2="515" stroke="#718078"/><text x="90" y="565" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">0</text><text x="1110" y="565" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#65766e">50</text>
+</svg><figcaption>图 4　完成地点数相同时，智能路线相对精确最优解的总时间差</figcaption></figure><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>6 / 9</span></div></section>
+  <section class="page"><h2>6. BGE、知识图谱与天气消融</h2><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="单因素消融：Full 相对关闭功能组的平均差">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">单因素消融：Full 相对关闭功能组的平均差</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">误差线为固定场景配对差均值的 10,000 次 bootstrap 95% 区间；不报告 p 值</text>
+  <text x="258" y="161" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">BGE：语义匹配分</text>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="132" width="62.63775" height="44" rx="11" fill="#2f7d63"/>
+      <line x1="283.86425" x2="435.3763333333334" y1="154" y2="154" stroke="#1b2924" stroke-width="3"/><line x1="283.86425" x2="283.86425" y1="147" y2="161" stroke="#1b2924" stroke-width="3"/><line x1="435.3763333333334" x2="435.3763333333334" y1="147" y2="161" stroke="#1b2924" stroke-width="3"/>
+      <text x="354.63775" y="161" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">1.83 分</text>
+<text x="258" y="239" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">知识图谱：文化覆盖</text>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="210" width="68.94491666666666" height="44" rx="11" fill="#2f7d63"/>
+      <line x1="298.9146666666667" x2="409.9563333333333" y1="232" y2="232" stroke="#1b2924" stroke-width="3"/><line x1="298.9146666666667" x2="298.9146666666667" y1="225" y2="239" stroke="#1b2924" stroke-width="3"/><line x1="409.9563333333333" x2="409.9563333333333" y1="225" y2="239" stroke="#1b2924" stroke-width="3"/>
+      <text x="360.94491666666664" y="239" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">2.02 pp</text>
+<text x="258" y="317" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">天气：雨天室内占比</text>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="288" width="284.7210833333333" height="44" rx="11" fill="#2f7d63"/>
+      <line x1="280" x2="991.8044166666667" y1="310" y2="310" stroke="#1b2924" stroke-width="3"/><line x1="280" x2="280" y1="303" y2="317" stroke="#1b2924" stroke-width="3"/><line x1="991.8044166666667" x2="991.8044166666667" y1="303" y2="317" stroke="#1b2924" stroke-width="3"/>
+      <text x="576.7210833333334" y="317" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">8.33 pp</text>
+<text x="258" y="395" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">天气：晴天景观分</text>
+      <rect x="280" y="366" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="366" width="39.86225" height="44" rx="11" fill="#2f7d63"/>
+      <line x1="280" x2="382.5" y1="388" y2="388" stroke="#1b2924" stroke-width="3"/><line x1="280" x2="280" y1="381" y2="395" stroke="#1b2924" stroke-width="3"/><line x1="382.5" x2="382.5" y1="381" y2="395" stroke="#1b2924" stroke-width="3"/>
+      <text x="331.86225" y="395" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">1.17 分</text>
+</svg><figcaption>图 5　Full 与单项关闭配置的配对差；正值代表该模块带来提升</figcaption></figure><p>Full 对 No-BGE 的语义分平均提升 1.83；对 No-KG 的文化覆盖平均提升 2.02 个百分点。天气规则使雨天室内占比平均提升 8.33 个百分点，但雨天遮蔽评分差为 0；该零结果保留在报告中。</p><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>7 / 9</span></div></section>
+  <section class="page"><h2>7. 动态重算性能</h2><figure><svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="动态重算耗时分布与 500ms 阈值">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">动态重算耗时分布与 500ms 阈值</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">上部放大显示 1200 个样本的实际分布；下部恢复 0–500ms 验收尺度</text>
+  <rect x="90" y="272.7064220183486" width="46" height="147.2935779816514" rx="4" fill="#4b8c74"/><rect x="141" y="156.78899082568807" width="46" height="263.2110091743119" rx="4" fill="#4b8c74"/><rect x="192" y="135" width="46" height="285" rx="4" fill="#4b8c74"/><rect x="243" y="271.8348623853211" width="46" height="148.16513761467888" rx="4" fill="#4b8c74"/><rect x="294" y="372.9357798165138" width="46" height="47.06422018348624" rx="4" fill="#4b8c74"/><rect x="345" y="372.0642201834862" width="46" height="47.93577981651376" rx="4" fill="#4b8c74"/><rect x="396" y="397.3394495412844" width="46" height="22.660550458715598" rx="4" fill="#4b8c74"/><rect x="447" y="391.23853211009174" width="46" height="28.761467889908257" rx="4" fill="#4b8c74"/><rect x="498" y="399.08256880733944" width="46" height="20.91743119266055" rx="4" fill="#4b8c74"/><rect x="549" y="411.2844036697248" width="46" height="8.715596330275229" rx="4" fill="#4b8c74"/><rect x="600" y="417.38532110091745" width="46" height="2.614678899082569" rx="4" fill="#4b8c74"/><rect x="651" y="408.6697247706422" width="46" height="11.330275229357799" rx="4" fill="#4b8c74"/><rect x="702" y="413.0275229357798" width="46" height="6.972477064220183" rx="4" fill="#4b8c74"/><rect x="753" y="416.51376146788994" width="46" height="3.4862385321100917" rx="4" fill="#4b8c74"/><rect x="804" y="419.1284403669725" width="46" height="0.8715596330275229" rx="4" fill="#4b8c74"/><rect x="855" y="419.1284403669725" width="46" height="0.8715596330275229" rx="4" fill="#4b8c74"/><rect x="906" y="420" width="46" height="0" rx="4" fill="#4b8c74"/><rect x="957" y="420" width="46" height="0" rx="4" fill="#4b8c74"/><rect x="1008" y="420" width="46" height="0" rx="4" fill="#4b8c74"/><rect x="1059" y="420" width="46" height="0" rx="4" fill="#4b8c74"/><line x1="90" x2="1110" y1="420" y2="420" stroke="#718078"/>
+    <line x1="503.6202" x2="503.6202" y1="123" y2="420" stroke="#b67c3c" stroke-width="3" stroke-dasharray="8 6"/><text x="511.6202" y="117" font-family="Microsoft YaHei, sans-serif" font-size="17" fill="#9b632c">P95 8.11ms</text>
+    <text x="90" y="450" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">0</text><text x="1110" y="450" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">20ms（分布放大）</text>
+    <text x="90" y="500" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#31463e">验收尺度</text><line x1="90" x2="1110" y1="535" y2="535" stroke="#d7ded7" stroke-width="14" stroke-linecap="round"/>
+    <line x1="106.544808" x2="106.544808" y1="518" y2="552" stroke="#b67c3c" stroke-width="4"/><line x1="1110" x2="1110" y1="510" y2="558" stroke="#bd4a3d" stroke-width="5"/><text x="1110" y="590" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#bd4a3d">500ms 阈值</text>
+</svg><figcaption>图 6　1,200 个 Full 动态重算样本；红线为 500ms 现场验收阈值</figcaption></figure><div class="metrics"><div class="metric"><span>平均</span><strong>2.97ms</strong><small>预热后重算</small></div><div class="metric"><span>P50</span><strong>2.53ms</strong><small>中位耗时</small></div><div class="metric"><span>P95</span><strong>8.11ms</strong><small>低于 500ms</small></div><div class="metric"><span>&gt;500ms</span><strong>0.00%</strong><small>门槛 ≤1%</small></div></div><p>BGE 冷启动 139.69ms，暖推理 P95 4.72ms。二者单独记录，不混入动态重算。</p><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>8 / 9</span></div></section>
+  <section class="page"><h2>8. 代表性案例、边界与复现</h2><div class="card"><h3>01-six-dynasties-rain-short · 六朝古都 / 雨天低体力短时</h3><p><b>智能：</b>jiming-temple → taicheng<br/><b>基准：</b>jiming-temple → taicheng<br/><b>最优：</b>jiming-temple → taicheng<br/>完成 2 点，文化覆盖 50% ，总时间 43 分钟。</p></div><div class="card"><h3>13-qinhuai-closing-pressure · 秦淮城南 / 下午临近闭馆</h3><p><b>智能：</b>dabaosi → laomendong → confucius-temple<br/><b>基准：</b>confucius-temple → laomendong<br/><b>最优：</b>dabaosi → laomendong → confucius-temple<br/>完成 3 点，文化覆盖 86% ，总时间 89 分钟。</p></div><div class="card"><h3>55-night-weekend-night · 城市夜游 / 周末傍晚避拥挤</h3><p><b>智能：</b>laomendong → confucius-temple → xuanwu-lake<br/><b>基准：</b>1912 → confucius-temple → laomendong<br/><b>最优：</b>1912 → confucius-temple → laomendong<br/>完成 3 点，文化覆盖 83% ，总时间 138 分钟。</p></div><div class="callout"><b>数据边界：</b>开放时间、拥挤、景观与舒适度中的部分字段为项目样本；步行路网是 2026-09-27T08:27:22.676Z 生成的离线快照，不代表实时城市数据。场景仅覆盖现有 23 个 POI 与 ≤5 点问题。</div><h3>一键复现</h3><p><code>npm run experiment</code> 顺序执行真实本地 BGE 固定结果、功能/消融/性能实验、报告生成和完整性核验。原始结果保存在 <code>results.csv</code>、<code>performance.csv</code> 与 <code>summary.json</code>。</p><div class="footer"><span>宁可慢一点 · 路线规划算法对照实验</span><span>9 / 9</span></div></section>
+  </body></html>

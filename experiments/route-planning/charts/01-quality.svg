@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-label="硬约束与可用性验收">
+  <rect width="1200" height="620" rx="28" fill="#fbfaf5"/>
+  <text x="64" y="62" font-family="Microsoft YaHei, sans-serif" font-size="30" font-weight="700" fill="#18372d">硬约束与可用性验收</text>
+  <text x="64" y="96" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#65766e">分母分别为 56 个可行场景、4 个不可行场景及已生成路线</text>
+  <text x="258" y="161" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">可行路线生成率</text>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="132" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="161" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="239" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">不可行场景正确拒绝率</text>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="210" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="239" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="317" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">无超预算路线占比</text>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="288" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="317" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+<text x="258" y="395" text-anchor="end" font-family="Microsoft YaHei, sans-serif" font-size="20" fill="#31463e">无闭馆违规路线占比</text>
+      <rect x="280" y="366" width="820" height="44" rx="11" fill="#e5e8e1"/>
+      <rect x="280" y="366" width="820" height="44" rx="11" fill="#2f7d63"/>
+      
+      <text x="1112" y="395" font-family="Microsoft YaHei, sans-serif" font-size="19" font-weight="700" fill="#18372d">100.00%</text>
+</svg>

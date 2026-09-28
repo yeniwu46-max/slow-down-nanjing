@@ -2,7 +2,7 @@
 
 > 版本 1.0 · 2026  
 > 产品：金陵慢旅行 H5「宁可慢一点」竞赛演示版  
-> 配套：[比赛版技术更新（2026-09-25）](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md) · [BGE 与路由技术栈](./BGE_AND_ROUTING_STACK.md) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [README.md](../README.md)
+> 配套：[比赛版技术更新（2026-09-25）](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md) · [BGE 与路由技术栈](./BGE_AND_ROUTING_STACK.md) · [算法对照实验与复现](./ROUTE_PLANNING_EXPERIMENTS.md) · [ARCHITECTURE.md](../ARCHITECTURE.md) · [README.md](../README.md)
 
 > **当前比赛版说明：** 2026-09-25 起，比赛主流程已收敛为“智能路线规划、经典路线、项目原理与数据说明”三个一级入口。本文件后续章节仍保留完整产品和历史模块说明；当前比赛版的数据模型、动态重算、解释输出、弱网策略与实测结果以[比赛版技术更新](./COMPETITION_TECHNICAL_UPDATE_2026-09-25.md)为准。
 
@@ -197,3 +197,16 @@ AR：http://localhost:3006
 - 用户数据在浏览器本地，清缓存即丢失。
 - AR 依赖摄像头与 HTTPS；桌面可用演示模式与键盘手势。
 - `ARCHITECTURE.md` 曾因编码损坏；以本文与仓库现状为准。
+
+---
+
+## 9. 2026-09-28：路线规划算法对照实验
+
+- 建立 12 个 POI 模板 × 5 种条件的 60 场景固定基准，其中 56 个可行、4 个故意不可行。
+- 新增 BGE、文化知识图谱和天气规则三个独立消融开关；关闭规划贡献时仍保留统一后验指标。
+- 完成 240 组功能实验和 1,200 个动态重算性能样本，独立复核预算、闭馆和临时关闭约束。
+- 报告由原始结果自动生成 Markdown、自包含 HTML、9 页 A4 PDF 和 6 张 SVG 图表。
+- 当前完整配置的可行生成率与不可行正确拒绝率均为 100%，各类硬约束违规率为 0%，动态重算 P95 为 8.11ms。
+- 距离、总时间及雨天遮蔽的零结果或不稳定结果均如实保留，不以筛选案例制造算法改进。
+
+完整方法、结果、边界和复现命令见 [路线规划算法对照实验与复现说明](./ROUTE_PLANNING_EXPERIMENTS.md)，设计取舍见 [ADR-001](./decisions/ADR-001-REPRODUCIBLE-ROUTE-BENCHMARK.md)。

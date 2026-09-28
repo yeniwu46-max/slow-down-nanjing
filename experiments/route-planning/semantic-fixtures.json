@@ -1,0 +1,3223 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-28T07:02:26.283Z",
+  "model": {
+    "id": "bge-small-zh-v1.5",
+    "source": "Xenova/bge-small-zh-v1.5",
+    "revision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+    "dtype": "q8",
+    "pooling": "cls",
+    "normalized": true,
+    "queryInstruction": "为这个句子生成表示以用于检索相关文章：",
+    "dimensions": 512,
+    "poiEmbeddingSourceHash": "9bd00bfb4e0451f1ee66e88e8019b1c8c38c842f048d983e06a51171252975f8"
+  },
+  "coldLoadMs": 139.692,
+  "warmInferenceMs": [
+    3.896,
+    4.243,
+    3.485,
+    4.161,
+    4.673,
+    4.778,
+    3.853,
+    3.413,
+    3.474,
+    3.443,
+    2.994,
+    3.19
+  ],
+  "fixtures": {
+    "six-dynasties": {
+      "query": "想看六朝遗迹和古都城墙，按文脉慢慢走",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "preference": "culture",
+        "cultureFocusTags": [
+          "六朝文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:six-dynasties"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "taicheng",
+          "score": 100,
+          "rawSimilarity": 0.601011,
+          "matchedTags": [
+            "六朝文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:six-dynasties",
+            "theme:six-dynasties"
+          ],
+          "reasons": [
+            "图谱匹配：六朝、六朝文脉"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 83,
+          "rawSimilarity": 0.566696,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 80,
+          "rawSimilarity": 0.560516,
+          "matchedTags": [
+            "六朝文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:six-dynasties",
+            "theme:six-dynasties"
+          ],
+          "reasons": [
+            "图谱匹配：六朝、六朝文脉"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 63,
+          "rawSimilarity": 0.525253,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 60,
+          "rawSimilarity": 0.519004,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 59,
+          "rawSimilarity": 0.517144,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 59,
+          "rawSimilarity": 0.516164,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 48,
+          "rawSimilarity": 0.494266,
+          "matchedTags": [
+            "六朝文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:six-dynasties",
+            "theme:six-dynasties"
+          ],
+          "reasons": [
+            "图谱匹配：六朝、六朝文脉"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 43,
+          "rawSimilarity": 0.482516,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 38,
+          "rawSimilarity": 0.473423,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 32,
+          "rawSimilarity": 0.461219,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 29,
+          "rawSimilarity": 0.454911,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 28,
+          "rawSimilarity": 0.451252,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 27,
+          "rawSimilarity": 0.450539,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 27,
+          "rawSimilarity": 0.449783,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 25,
+          "rawSimilarity": 0.446853,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 15,
+          "rawSimilarity": 0.424999,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 15,
+          "rawSimilarity": 0.425824,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 11,
+          "rawSimilarity": 0.417155,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 7,
+          "rawSimilarity": 0.407768,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 3,
+          "rawSimilarity": 0.399431,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 2,
+          "rawSimilarity": 0.397685,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 0,
+          "rawSimilarity": 0.394109,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "period:six-dynasties"
+          ],
+          "reasons": [
+            "图谱匹配：六朝"
+          ]
+        }
+      ],
+      "inferenceMs": 3.896,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "republican": {
+      "query": "想看民国建筑、梧桐街区和城市近代记忆",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "preference": "culture",
+        "cultureFocusTags": [
+          "民国文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:republican"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "yihe-road",
+          "score": 100,
+          "rawSimilarity": 0.645028,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 84,
+          "rawSimilarity": 0.591062,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 84,
+          "rawSimilarity": 0.592615,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 79,
+          "rawSimilarity": 0.575523,
+          "matchedTags": [
+            "民国建筑"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 74,
+          "rawSimilarity": 0.557464,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 60,
+          "rawSimilarity": 0.511344,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 51,
+          "rawSimilarity": 0.480317,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 43,
+          "rawSimilarity": 0.452626,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 42,
+          "rawSimilarity": 0.45078,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 39,
+          "rawSimilarity": 0.439903,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 36,
+          "rawSimilarity": 0.428981,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 33,
+          "rawSimilarity": 0.420183,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 33,
+          "rawSimilarity": 0.419519,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 31,
+          "rawSimilarity": 0.412965,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 27,
+          "rawSimilarity": 0.399035,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 26,
+          "rawSimilarity": 0.393732,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 21,
+          "rawSimilarity": 0.376826,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 19,
+          "rawSimilarity": 0.371731,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 18,
+          "rawSimilarity": 0.368699,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 17,
+          "rawSimilarity": 0.365796,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 15,
+          "rawSimilarity": 0.359641,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 4,
+          "rawSimilarity": 0.322405,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 0,
+          "rawSimilarity": 0.307602,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 4.243,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "qinhuai": {
+      "query": "想沿秦淮河了解科举、老城南和市井生活",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "preference": "culture",
+        "cultureFocusTags": [
+          "秦淮文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:qinhuai"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "laomendong",
+          "score": 100,
+          "rawSimilarity": 0.613201,
+          "matchedTags": [
+            "老城南"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:qinhuai"
+          ],
+          "reasons": [
+            "图谱匹配：秦淮与老城南"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 95,
+          "rawSimilarity": 0.598475,
+          "matchedTags": [
+            "秦淮文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:qinhuai"
+          ],
+          "reasons": [
+            "图谱匹配：秦淮与老城南"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 50,
+          "rawSimilarity": 0.458533,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "theme:qinhuai"
+          ],
+          "reasons": [
+            "图谱匹配：秦淮与老城南"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 48,
+          "rawSimilarity": 0.452369,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 45,
+          "rawSimilarity": 0.443116,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 42,
+          "rawSimilarity": 0.433178,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 41,
+          "rawSimilarity": 0.430496,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 40,
+          "rawSimilarity": 0.425703,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 40,
+          "rawSimilarity": 0.426314,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 38,
+          "rawSimilarity": 0.422359,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 38,
+          "rawSimilarity": 0.421612,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 36,
+          "rawSimilarity": 0.414166,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 35,
+          "rawSimilarity": 0.411396,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 35,
+          "rawSimilarity": 0.410215,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 34,
+          "rawSimilarity": 0.409453,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 32,
+          "rawSimilarity": 0.401473,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 31,
+          "rawSimilarity": 0.399317,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 30,
+          "rawSimilarity": 0.395525,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 25,
+          "rawSimilarity": 0.379785,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 21,
+          "rawSimilarity": 0.367203,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 20,
+          "rawSimilarity": 0.364464,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 10,
+          "rawSimilarity": 0.334925,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 0,
+          "rawSimilarity": 0.303028,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 3.485,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "ming-wall": {
+      "query": "想理解明城墙和南京都城防御体系",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "preference": "culture",
+        "cultureFocusTags": [
+          "明代文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:ming-city"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "taicheng",
+          "score": 100,
+          "rawSimilarity": 0.556534,
+          "matchedTags": [
+            "明城墙"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:ming-city"
+          ],
+          "reasons": [
+            "图谱匹配：明都与城墙"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 98,
+          "rawSimilarity": 0.550161,
+          "matchedTags": [
+            "明城墙"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:ming-city"
+          ],
+          "reasons": [
+            "图谱匹配：明都与城墙"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 80,
+          "rawSimilarity": 0.500745,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "theme:ming-city"
+          ],
+          "reasons": [
+            "图谱匹配：明都与城墙"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 73,
+          "rawSimilarity": 0.479163,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 71,
+          "rawSimilarity": 0.473794,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 70,
+          "rawSimilarity": 0.471534,
+          "matchedTags": [
+            "明代文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:ming-city"
+          ],
+          "reasons": [
+            "图谱匹配：明都与城墙"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 70,
+          "rawSimilarity": 0.471549,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 63,
+          "rawSimilarity": 0.452562,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 60,
+          "rawSimilarity": 0.44408,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 54,
+          "rawSimilarity": 0.426632,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 52,
+          "rawSimilarity": 0.420532,
+          "matchedTags": [
+            "明代文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:ming-city"
+          ],
+          "reasons": [
+            "图谱匹配：明都与城墙"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 50,
+          "rawSimilarity": 0.41457,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 49,
+          "rawSimilarity": 0.41137,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 43,
+          "rawSimilarity": 0.394221,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 43,
+          "rawSimilarity": 0.395207,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 42,
+          "rawSimilarity": 0.39255,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 37,
+          "rawSimilarity": 0.377821,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 26,
+          "rawSimilarity": 0.345681,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 23,
+          "rawSimilarity": 0.338095,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 19,
+          "rawSimilarity": 0.326436,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 9,
+          "rawSimilarity": 0.29701,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 2,
+          "rawSimilarity": 0.277876,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 0,
+          "rawSimilarity": 0.272769,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 4.161,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "zhongshan": {
+      "query": "想走钟山民国纪念路线，也看看山林风景",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "preference": "culture",
+        "cultureFocusTags": [
+          "民国文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:republican"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "sun-yat-sen",
+          "score": 100,
+          "rawSimilarity": 0.637514,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 99,
+          "rawSimilarity": 0.633338,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 69,
+          "rawSimilarity": 0.543255,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 67,
+          "rawSimilarity": 0.538244,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 62,
+          "rawSimilarity": 0.523904,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 55,
+          "rawSimilarity": 0.501124,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 50,
+          "rawSimilarity": 0.485119,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 47,
+          "rawSimilarity": 0.478167,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 42,
+          "rawSimilarity": 0.462048,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 40,
+          "rawSimilarity": 0.455822,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 37,
+          "rawSimilarity": 0.448238,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 34,
+          "rawSimilarity": 0.437805,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 33,
+          "rawSimilarity": 0.435615,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 28,
+          "rawSimilarity": 0.418957,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 24,
+          "rawSimilarity": 0.406719,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 23,
+          "rawSimilarity": 0.404921,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 21,
+          "rawSimilarity": 0.397312,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 19,
+          "rawSimilarity": 0.393622,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 16,
+          "rawSimilarity": 0.385136,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 16,
+          "rawSimilarity": 0.383652,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 16,
+          "rawSimilarity": 0.384903,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 15,
+          "rawSimilarity": 0.379414,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 0,
+          "rawSimilarity": 0.33528,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 4.673,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "museum": {
+      "query": "想在博物馆和历史建筑中了解南京城市变迁",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {},
+      "matches": [
+        {
+          "poiId": "nanjing-museum",
+          "score": 100,
+          "rawSimilarity": 0.663894,
+          "matchedTags": [
+            "博物馆"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:heritage"
+          ],
+          "reasons": [
+            "图谱匹配：遗产保护与考古",
+            "室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 88,
+          "rawSimilarity": 0.624487,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "半室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 80,
+          "rawSimilarity": 0.598975,
+          "matchedTags": [
+            "博物馆"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:heritage"
+          ],
+          "reasons": [
+            "图谱匹配：遗产保护与考古",
+            "半室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 79,
+          "rawSimilarity": 0.596857,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 75,
+          "rawSimilarity": 0.583216,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 72,
+          "rawSimilarity": 0.573696,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "theme:heritage"
+          ],
+          "reasons": [
+            "图谱匹配：遗产保护与考古",
+            "室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 64,
+          "rawSimilarity": 0.548811,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 57,
+          "rawSimilarity": 0.5269,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 56,
+          "rawSimilarity": 0.525694,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 56,
+          "rawSimilarity": 0.523981,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 53,
+          "rawSimilarity": 0.51485,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 52,
+          "rawSimilarity": 0.510407,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 46,
+          "rawSimilarity": 0.492815,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 45,
+          "rawSimilarity": 0.490971,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 44,
+          "rawSimilarity": 0.484861,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 41,
+          "rawSimilarity": 0.475815,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "半室内且雨天适宜度高"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 30,
+          "rawSimilarity": 0.440366,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "theme:heritage"
+          ],
+          "reasons": [
+            "图谱匹配：遗产保护与考古"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 29,
+          "rawSimilarity": 0.438112,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 28,
+          "rawSimilarity": 0.434796,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 24,
+          "rawSimilarity": 0.421656,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 9,
+          "rawSimilarity": 0.376596,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 7,
+          "rawSimilarity": 0.368873,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 0,
+          "rawSimilarity": 0.346745,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [
+            "theme:heritage"
+          ],
+          "reasons": [
+            "图谱匹配：遗产保护与考古"
+          ]
+        }
+      ],
+      "inferenceMs": 4.778,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "buddhist": {
+      "query": "想参访南京佛教古迹，环境安静一些",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "avoidCrowds": true,
+        "preference": "culture",
+        "cultureFocusTags": [
+          "佛教文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:buddhism"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "dabaosi",
+          "score": 100,
+          "rawSimilarity": 0.64418,
+          "matchedTags": [
+            "佛教文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:buddhism"
+          ],
+          "reasons": [
+            "图谱匹配：佛教文化"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 95,
+          "rawSimilarity": 0.633833,
+          "matchedTags": [
+            "佛教文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:buddhism"
+          ],
+          "reasons": [
+            "图谱匹配：佛教文化"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 82,
+          "rawSimilarity": 0.607846,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 75,
+          "rawSimilarity": 0.594387,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 73,
+          "rawSimilarity": 0.589703,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 72,
+          "rawSimilarity": 0.588142,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 63,
+          "rawSimilarity": 0.569225,
+          "matchedTags": [
+            "佛教文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:buddhism"
+          ],
+          "reasons": [
+            "图谱匹配：佛教文化"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 53,
+          "rawSimilarity": 0.550596,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 53,
+          "rawSimilarity": 0.549314,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 49,
+          "rawSimilarity": 0.542814,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 48,
+          "rawSimilarity": 0.540819,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 46,
+          "rawSimilarity": 0.536879,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 44,
+          "rawSimilarity": 0.531679,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 44,
+          "rawSimilarity": 0.531613,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 36,
+          "rawSimilarity": 0.516674,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 32,
+          "rawSimilarity": 0.508409,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 30,
+          "rawSimilarity": 0.504805,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 29,
+          "rawSimilarity": 0.502528,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 25,
+          "rawSimilarity": 0.493784,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 22,
+          "rawSimilarity": 0.488256,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 12,
+          "rawSimilarity": 0.467818,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 11,
+          "rawSimilarity": 0.466899,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 0,
+          "rawSimilarity": 0.443881,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 3.853,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "lake": {
+      "query": "想看湖景和园林，路线轻松并有休息处",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "walkingAbility": "relaxed",
+        "preference": "culture",
+        "cultureFocusTags": [
+          "金陵山水"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:landscape"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "xuanwu-lake",
+          "score": 100,
+          "rawSimilarity": 0.551613,
+          "matchedTags": [
+            "金陵山水"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:landscape"
+          ],
+          "reasons": [
+            "图谱匹配：金陵山水",
+            "体力消耗2级",
+            "可使用公共座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 92,
+          "rawSimilarity": 0.536867,
+          "matchedTags": [
+            "金陵山水"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:landscape"
+          ],
+          "reasons": [
+            "图谱匹配：金陵山水",
+            "体力消耗2级",
+            "可使用亭廊、公共座椅"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 84,
+          "rawSimilarity": 0.520868,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用亭廊、公共座椅"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 64,
+          "rawSimilarity": 0.481122,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用沿街休息点"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 63,
+          "rawSimilarity": 0.480527,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 59,
+          "rawSimilarity": 0.472042,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用沿街休息点"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 57,
+          "rawSimilarity": 0.467755,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共座椅"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 52,
+          "rawSimilarity": 0.458692,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用观景休息点"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 47,
+          "rawSimilarity": 0.447763,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共座椅"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 44,
+          "rawSimilarity": 0.443471,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用平台休息点、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 38,
+          "rawSimilarity": 0.431624,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用公共座椅"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 38,
+          "rawSimilarity": 0.431622,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗1级",
+            "可使用室内座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 28,
+          "rawSimilarity": 0.410692,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 26,
+          "rawSimilarity": 0.408161,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用餐饮、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 17,
+          "rawSimilarity": 0.390074,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用休息座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 16,
+          "rawSimilarity": 0.387546,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用餐饮、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 14,
+          "rawSimilarity": 0.383599,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用休息座椅"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 13,
+          "rawSimilarity": 0.381583,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 12,
+          "rawSimilarity": 0.380452,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗1级",
+            "可使用餐饮、室内休息空间"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 9,
+          "rawSimilarity": 0.374097,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 8,
+          "rawSimilarity": 0.37228,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用室内座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 1,
+          "rawSimilarity": 0.359879,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗1级",
+            "可使用室内座椅、咖啡"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 0,
+          "rawSimilarity": 0.357197,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用公共座椅、公共卫生间"
+          ]
+        }
+      ],
+      "inferenceMs": 3.413,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "low-energy": {
+      "query": "不想走太累，想逛民国街区并找地方休息",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "walkingAbility": "relaxed",
+        "preference": "culture",
+        "cultureFocusTags": [
+          "民国文化"
+        ],
+        "cultureFocusEntityIds": [
+          "theme:republican"
+        ]
+      },
+      "matches": [
+        {
+          "poiId": "yihe-road",
+          "score": 100,
+          "rawSimilarity": 0.648096,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆",
+            "体力消耗2级",
+            "可使用沿街休息点"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 88,
+          "rawSimilarity": 0.613216,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国城市记忆",
+            "体力消耗1级",
+            "可使用餐饮、室内休息空间"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 77,
+          "rawSimilarity": 0.582073,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗1级",
+            "可使用室内座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 66,
+          "rawSimilarity": 0.550879,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆",
+            "体力消耗2级",
+            "可使用沿街休息点"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 55,
+          "rawSimilarity": 0.518382,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆",
+            "体力消耗2级",
+            "可使用座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 47,
+          "rawSimilarity": 0.495748,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆",
+            "体力消耗2级",
+            "可使用座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 41,
+          "rawSimilarity": 0.478266,
+          "matchedTags": [
+            "民国文化"
+          ],
+          "matchedKnowledgeEntityIds": [
+            "period:republic",
+            "theme:republican"
+          ],
+          "reasons": [
+            "图谱匹配：民国、民国城市记忆",
+            "可使用平台休息点、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 32,
+          "rawSimilarity": 0.452042,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用餐饮、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 32,
+          "rawSimilarity": 0.450692,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用餐饮、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 29,
+          "rawSimilarity": 0.444655,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗1级",
+            "可使用室内座椅、咖啡"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 27,
+          "rawSimilarity": 0.437508,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共座椅"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 25,
+          "rawSimilarity": 0.432448,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用亭廊、公共座椅"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 21,
+          "rawSimilarity": 0.419294,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用公共座椅"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 20,
+          "rawSimilarity": 0.41856,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用休息座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 17,
+          "rawSimilarity": 0.409376,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用公共座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 16,
+          "rawSimilarity": 0.405812,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用观景休息点"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 16,
+          "rawSimilarity": 0.406076,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 13,
+          "rawSimilarity": 0.397203,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用公共座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 10,
+          "rawSimilarity": 0.389276,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用室内座椅、餐饮"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 8,
+          "rawSimilarity": 0.384031,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用亭廊、公共座椅"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 7,
+          "rawSimilarity": 0.381374,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用游客中心、公共座椅"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 6,
+          "rawSimilarity": 0.376328,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "可使用座椅、公共卫生间"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 0,
+          "rawSimilarity": 0.359848,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "可使用休息座椅"
+          ]
+        }
+      ],
+      "inferenceMs": 3.474,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "accessible": {
+      "query": "带老人出行，希望无障碍、室内多、少走路",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "walkingAbility": "relaxed"
+      },
+      "matches": [
+        {
+          "poiId": "wutong-avenue",
+          "score": 100,
+          "rawSimilarity": 0.459135,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "laomendong",
+          "score": 90,
+          "rawSimilarity": 0.447797,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 76,
+          "rawSimilarity": 0.431312,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高",
+            "体力消耗1级"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 71,
+          "rawSimilarity": 0.426111,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 71,
+          "rawSimilarity": 0.425889,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 52,
+          "rawSimilarity": 0.403777,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 49,
+          "rawSimilarity": 0.401102,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高",
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 48,
+          "rawSimilarity": 0.399794,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "半室内且雨天适宜度高",
+            "体力消耗1级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 40,
+          "rawSimilarity": 0.390065,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 39,
+          "rawSimilarity": 0.389129,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 33,
+          "rawSimilarity": 0.382945,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 31,
+          "rawSimilarity": 0.380307,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高",
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 28,
+          "rawSimilarity": 0.376654,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 19,
+          "rawSimilarity": 0.366163,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "室内且雨天适宜度高",
+            "体力消耗1级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 15,
+          "rawSimilarity": 0.361854,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 15,
+          "rawSimilarity": 0.361715,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 14,
+          "rawSimilarity": 0.360447,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 7,
+          "rawSimilarity": 0.352854,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 6,
+          "rawSimilarity": 0.35146,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 5,
+          "rawSimilarity": 0.350625,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 2,
+          "rawSimilarity": 0.34703,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "无障碍条件较友好"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 1,
+          "rawSimilarity": 0.345832,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "半室内且雨天适宜度高",
+            "体力消耗2级"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 0,
+          "rawSimilarity": 0.344575,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "半室内且雨天适宜度高",
+            "体力消耗2级",
+            "无障碍条件较友好"
+          ]
+        }
+      ],
+      "inferenceMs": 3.443,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "night": {
+      "query": "周末傍晚想夜游，避开拥挤并看城市灯景",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {
+        "avoidCrowds": true,
+        "nightMode": true
+      },
+      "matches": [
+        {
+          "poiId": "laomendong",
+          "score": 100,
+          "rawSimilarity": 0.442844,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 91,
+          "rawSimilarity": 0.433232,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 89,
+          "rawSimilarity": 0.431007,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 84,
+          "rawSimilarity": 0.424819,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 80,
+          "rawSimilarity": 0.420236,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 79,
+          "rawSimilarity": 0.419691,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 76,
+          "rawSimilarity": 0.415745,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 71,
+          "rawSimilarity": 0.410635,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 63,
+          "rawSimilarity": 0.402091,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 59,
+          "rawSimilarity": 0.397151,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 55,
+          "rawSimilarity": 0.392537,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 53,
+          "rawSimilarity": 0.390645,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 48,
+          "rawSimilarity": 0.385624,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 47,
+          "rawSimilarity": 0.383888,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 42,
+          "rawSimilarity": 0.378935,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 34,
+          "rawSimilarity": 0.369709,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 34,
+          "rawSimilarity": 0.370267,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 31,
+          "rawSimilarity": 0.366769,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 30,
+          "rawSimilarity": 0.3651,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 16,
+          "rawSimilarity": 0.349522,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 5,
+          "rawSimilarity": 0.337251,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 3,
+          "rawSimilarity": 0.335926,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 0,
+          "rawSimilarity": 0.332106,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 2.994,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    },
+    "cross-city": {
+      "query": "时间有限，想从山林到老城看南京历史层次",
+      "provider": "bge-local",
+      "modelId": "bge-small-zh-v1.5",
+      "modelRevision": "75c43b069aac4d136ba6bc1122f995fedcfd2781",
+      "inferredPatch": {},
+      "matches": [
+        {
+          "poiId": "laomendong",
+          "score": 100,
+          "rawSimilarity": 0.610321,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“老城南巷弄，文艺小店与梧桐影。”语义相关"
+          ]
+        },
+        {
+          "poiId": "presidential-palace",
+          "score": 95,
+          "rawSimilarity": 0.603332,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“近代史缩影，园林与建筑交织。”语义相关"
+          ]
+        },
+        {
+          "poiId": "dabaosi",
+          "score": 92,
+          "rawSimilarity": 0.598085,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“琉璃塔遗址与地下宫，城南的一层旧时光。”语义相关"
+          ]
+        },
+        {
+          "poiId": "wutong-avenue",
+          "score": 83,
+          "rawSimilarity": 0.585012,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“中山东路林荫，树冠把一条街变成绿廊。”语义相关"
+          ]
+        },
+        {
+          "poiId": "nanjing-museum",
+          "score": 82,
+          "rawSimilarity": 0.582914,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国建筑与馆藏文物，感受金陵文脉。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yuhuatai",
+          "score": 75,
+          "rawSimilarity": 0.572796,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“雨花石与纪念林，城市南端的静思之地。”语义相关"
+          ]
+        },
+        {
+          "poiId": "pioneer-bookstore",
+          "score": 64,
+          "rawSimilarity": 0.556497,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“十字架下的阅读空间，适合独自静处。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhonghua-gate",
+          "score": 59,
+          "rawSimilarity": 0.549042,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明朝都城正南门，瓮城层层，可走可看。”语义相关"
+          ]
+        },
+        {
+          "poiId": "jiming-temple",
+          "score": 58,
+          "rawSimilarity": 0.547935,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“古刹樱影，台城脚下的一抹禅意。”语义相关"
+          ]
+        },
+        {
+          "poiId": "chaotian-palace",
+          "score": 57,
+          "rawSimilarity": 0.547015,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“江南官署遗存，南京博物院朝天宫分馆所在。”语义相关"
+          ]
+        },
+        {
+          "poiId": "mochou-lake",
+          "score": 55,
+          "rawSimilarity": 0.543448,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“城西一勺水，清晨最安静。”语义相关"
+          ]
+        },
+        {
+          "poiId": "taicheng",
+          "score": 52,
+          "rawSimilarity": 0.538701,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“明城墙遗迹，俯瞰玄武湖的最佳视角。”语义相关"
+          ]
+        },
+        {
+          "poiId": "sun-yat-sen",
+          "score": 43,
+          "rawSimilarity": 0.52584,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“台阶是给脚步用的标点，把呼吸交给松风。”语义相关"
+          ]
+        },
+        {
+          "poiId": "confucius-temple",
+          "score": 41,
+          "rawSimilarity": 0.522821,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秦淮河畔，灯火与书声并存。”语义相关"
+          ]
+        },
+        {
+          "poiId": "meihua-hill",
+          "score": 28,
+          "rawSimilarity": 0.503381,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“钟山南麓，冬末春初梅花如雪。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake",
+          "score": 24,
+          "rawSimilarity": 0.496944,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“六朝烟水，湖光山色。环洲到梁洲，不必赶完一圈。”语义相关"
+          ]
+        },
+        {
+          "poiId": "qixia",
+          "score": 22,
+          "rawSimilarity": 0.495001,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“秋叶染山，栖霞寺藏在红枫里。”语义相关"
+          ]
+        },
+        {
+          "poiId": "zhongshan",
+          "score": 20,
+          "rawSimilarity": 0.491378,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“紫金山际，明孝陵与梧桐大道。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yihe-road",
+          "score": 18,
+          "rawSimilarity": 0.488939,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“法国梧桐夹道，青砖灰瓦，门牌安静得像还在等人。”语义相关"
+          ]
+        },
+        {
+          "poiId": "1912",
+          "score": 14,
+          "rawSimilarity": 0.482223,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“民国风情街区，咖啡与慢生活。”语义相关"
+          ]
+        },
+        {
+          "poiId": "xuanwu-lake-pavilion",
+          "score": 10,
+          "rawSimilarity": 0.477328,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梁洲赏樱，湖风把城墙影子摊在水上。”语义相关"
+          ]
+        },
+        {
+          "poiId": "yijiu-cafe",
+          "score": 2,
+          "rawSimilarity": 0.465714,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“梧桐树影里的老洋房咖啡。”语义相关"
+          ]
+        },
+        {
+          "poiId": "ming-xiaoling",
+          "score": 0,
+          "rawSimilarity": 0.462013,
+          "matchedTags": [],
+          "matchedKnowledgeEntityIds": [],
+          "reasons": [
+            "与“神道石象生把人放回更早的朝代。”语义相关"
+          ]
+        }
+      ],
+      "inferenceMs": 3.19,
+      "createdAt": "2026-09-28T07:02:26.283Z"
+    }
+  }
+}
