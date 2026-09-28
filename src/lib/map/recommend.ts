@@ -46,6 +46,23 @@ export interface RecommendationOptions {
   dataStatus: string;
   originCoordinates?: { lat: number; lng: number } | null;
   semanticIntent?: SemanticIntent | null;
+  featureFlags?: Partial<PlannerFeatureFlags>;
+}
+
+export interface PlannerFeatureFlags {
+  semanticPreference: boolean;
+  cultureGraphScoring: boolean;
+  weatherAdaptation: boolean;
+}
+
+export const DEFAULT_PLANNER_FEATURE_FLAGS: PlannerFeatureFlags = {
+  semanticPreference: true,
+  cultureGraphScoring: true,
+  weatherAdaptation: true,
+};
+
+function resolveFeatureFlags(options: RecommendationOptions): PlannerFeatureFlags {
+  return { ...DEFAULT_PLANNER_FEATURE_FLAGS, ...options.featureFlags };
 }
 
 interface Candidate {
@@ -102,7 +119,7 @@ function plannedFrontScore(order: MapPoi[], planned: Set<string>): number {
   );
 }
 
-function minimumStay(poi: MapPoi): number {
+export function minimumStayMinutes(poi: MapPoi): number {
   const baseline = poi.venueType === "indoor" ? 20 : poi.venueType === "mixed" ? 18 : 15;
   return Math.min(poi.suggestedStayMinutes, baseline);
 }
@@ -201,7 +218,7 @@ function scheduleCandidate(
   initialWalkingMinutes: number,
   options: RecommendationOptions,
 ): { stays: number[]; stops: ScheduledStop[]; total: number; wait: number } | null {
-  const stays = order.map(minimumStay);
+  const stays = order.map(minimumStayMinutes);
   const stops: ScheduledStop[] = [];
   let cursor = options.departureTimeMinutes + initialWalkingMinutes;
   let totalWait = 0;
@@ -236,16 +253,21 @@ function scoreCandidate(
   options: RecommendationOptions,
   totalSelected: number,
 ): number {
+  const featureFlags = resolveFeatureFlags(options);
   const omittedPenalty = (totalSelected - candidate.order.length) * 1000;
-  const cultureBenefit = candidate.cultureCoverageScore * (options.preference === "culture" ? 0.15 : 0.05);
-  const weatherBenefit = options.weatherCondition === "rainy"
+  const cultureBenefit = featureFlags.cultureGraphScoring
+    ? candidate.cultureCoverageScore * (options.preference === "culture" ? 0.15 : 0.05)
+    : 0;
+  const weatherBenefit = featureFlags.weatherAdaptation && options.weatherCondition === "rainy"
     ? candidate.rainyScore * 0.28 + candidate.path.metrics.shelterScore * 0.18
-    : options.weatherCondition === "sunny"
+    : featureFlags.weatherAdaptation && options.weatherCondition === "sunny"
       ? candidate.sunnyScore * 0.24 + candidate.path.metrics.scenicScore * 0.08
       : 0;
   const crowdPenalty = options.avoidCrowds ? candidate.path.metrics.crowdCost * 0.3 : 0;
   const nightBenefit = options.nightMode ? candidate.path.metrics.nightSuitability * 0.22 : 0;
-  const semanticBenefit = Math.min(15, candidate.semanticScore * 0.15);
+  const semanticBenefit = featureFlags.semanticPreference
+    ? Math.min(15, candidate.semanticScore * 0.15)
+    : 0;
   const shared = omittedPenalty - cultureBenefit + crowdPenalty - nightBenefit - semanticBenefit;
   if (mode === "short") {
     // “效率”仍以总时长和距离为主，但在恶劣天气下允许小幅绕行，
@@ -592,7 +614,7 @@ export function recommendTwoRoutes(
   const optimizationProblem: ExactOptimizationProblem = {
     travelTimeMatrix,
     visitDurations: [
-      ...pois.map(minimumStay),
+      ...pois.map(minimumStayMinutes),
       ...(useVirtualStart ? [0] : []),
     ],
     timeWindows: [
