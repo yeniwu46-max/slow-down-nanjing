@@ -45,6 +45,7 @@ yarn-error.log*
 # Reproducible local AI/routing assets. Download/build scripts and manifests stay tracked.
 /public/models/
 /public/wasm/
+/public/maplibre/
 /integrations/data/
 __pycache__/
 *.pyc

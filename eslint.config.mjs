@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "public/maplibre/**",
     "public/wasm/**",
     "public/emotion-weather/**",
     "tools/verify-step-enter.js",

@@ -8,7 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import maplibregl, { type Map, type MapMouseEvent } from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import type { Map, MapMouseEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 import {
@@ -28,6 +29,8 @@ import {
 } from "@/lib/map/style-layers";
 import type { MapFilter, MapPoi, MapRoute } from "@/lib/map/types";
 import { cn } from "@/lib/utils";
+
+maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 export interface MapLibreHandle {
   map: Map | null;
