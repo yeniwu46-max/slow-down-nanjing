@@ -3,6 +3,7 @@
 金陵慢旅行 H5「宁可慢一点」竞赛演示版：主站（Next.js）+ AR 子应用（Vite）。
 
 - 技术文档：[docs/TECHNICAL.md](./docs/TECHNICAL.md)
+- 生产演示版技术更新：[docs/PRODUCTION_TECHNICAL_UPDATE_2026-09-29.md](./docs/PRODUCTION_TECHNICAL_UPDATE_2026-09-29.md)
 - 比赛版技术更新：[docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md](./docs/COMPETITION_TECHNICAL_UPDATE_2026-09-25.md)
 - BGE 与路由技术栈：[docs/BGE_AND_ROUTING_STACK.md](./docs/BGE_AND_ROUTING_STACK.md)
 - 文化知识图谱与叙事链：[docs/CULTURAL_KNOWLEDGE_GRAPH.md](./docs/CULTURAL_KNOWLEDGE_GRAPH.md)
