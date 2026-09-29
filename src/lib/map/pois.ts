@@ -402,25 +402,25 @@ function dataSources(sourceLabel: string): PoiDataSource[] {
 }
 
 const OPERATING_HOURS: Record<string, MapPoi["operatingHours"]> = {
-  "nanjing-museum": { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60, label: "09:00–17:00 样本" },
-  "presidential-palace": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 18 * 60, label: "08:30–18:00 样本" },
-  "jiming-temple": { opensAtMinutes: 7 * 60, closesAtMinutes: 17 * 60 + 30, label: "07:00–17:30 样本" },
-  taicheng: { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "08:30–17:00 样本" },
-  "sun-yat-sen": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "08:30–17:00 样本" },
-  "ming-xiaoling": { opensAtMinutes: 7 * 60, closesAtMinutes: 18 * 60, label: "07:00–18:00 样本" },
-  "chaotian-palace": { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60, label: "09:00–17:00 样本" },
-  dabaosi: { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60 + 30, label: "09:00–17:30 样本" },
-  "zhonghua-gate": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "08:30–17:00 样本" },
+  "nanjing-museum": { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60, label: "参考 09:00–17:00" },
+  "presidential-palace": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 18 * 60, label: "参考 08:30–18:00" },
+  "jiming-temple": { opensAtMinutes: 7 * 60, closesAtMinutes: 17 * 60 + 30, label: "参考 07:00–17:30" },
+  taicheng: { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "参考 08:30–17:00" },
+  "sun-yat-sen": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "参考 08:30–17:00" },
+  "ming-xiaoling": { opensAtMinutes: 7 * 60, closesAtMinutes: 18 * 60, label: "参考 07:00–18:00" },
+  "chaotian-palace": { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60, label: "参考 09:00–17:00" },
+  dabaosi: { opensAtMinutes: 9 * 60, closesAtMinutes: 17 * 60 + 30, label: "参考 09:00–17:30" },
+  "zhonghua-gate": { opensAtMinutes: 8 * 60 + 30, closesAtMinutes: 17 * 60, label: "参考 08:30–17:00" },
 };
 
 function defaultHours(venueType: VenueType): MapPoi["operatingHours"] {
   if (venueType === "indoor") {
-    return { opensAtMinutes: 9 * 60, closesAtMinutes: 18 * 60, label: "09:00–18:00 样本" };
+    return { opensAtMinutes: 9 * 60, closesAtMinutes: 18 * 60, label: "参考 09:00–18:00" };
   }
   if (venueType === "mixed") {
-    return { opensAtMinutes: 8 * 60, closesAtMinutes: 21 * 60, label: "08:00–21:00 样本" };
+    return { opensAtMinutes: 8 * 60, closesAtMinutes: 21 * 60, label: "参考 08:00–21:00" };
   }
-  return { opensAtMinutes: 6 * 60, closesAtMinutes: 21 * 60, label: "06:00–21:00 样本" };
+  return { opensAtMinutes: 6 * 60, closesAtMinutes: 21 * 60, label: "参考 06:00–21:00" };
 }
 
 export const MAP_POIS: MapPoi[] = BASE_POIS.map((poi) => {

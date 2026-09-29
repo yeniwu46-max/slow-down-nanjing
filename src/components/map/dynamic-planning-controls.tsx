@@ -72,7 +72,7 @@ export function DynamicPlanningControls({
       </div>
       {weatherError && (
         <p className="text-[10px] leading-relaxed text-amber-700" role="status">
-          天气接口暂不可用，正在使用缓存或南京默认样本；路线仍可计算。
+          天气暂不可用，已切换备用数据。
         </p>
       )}
 

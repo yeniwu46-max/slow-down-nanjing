@@ -425,8 +425,8 @@ function explainRoute(
       id: "crowd",
       tone: "comfort",
       text: reduction > 0
-        ? `项目样本拥挤成本比备选路线低 ${reduction}%`
-        : `项目样本拥挤成本 ${metrics.crowdCost}/100`,
+        ? `预计拥挤程度比备选路线低 ${reduction}%`
+        : `预计拥挤程度 ${metrics.crowdCost}/100`,
     });
   }
   if (options.nightMode) {
