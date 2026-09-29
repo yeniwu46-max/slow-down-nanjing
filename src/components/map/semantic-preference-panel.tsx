@@ -32,10 +32,7 @@ export function SemanticPreferencePanel({
       <div className="flex items-start gap-2">
         <BrainCircuit className="mt-0.5 h-4 w-4 shrink-0 text-gold" aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <h2 id="semantic-title" className="text-[11px] font-medium text-ink">用一句话描述这次路线</h2>
-          <p className="mt-0.5 text-[9px] leading-relaxed text-rock">
-            仅理解路线偏好，不采集情绪；文本由本机模型处理。
-          </p>
+          <h2 id="semantic-title" className="text-[11px] font-medium text-ink">路线偏好</h2>
         </div>
       </div>
 
@@ -50,10 +47,7 @@ export function SemanticPreferencePanel({
           className="w-full resize-none rounded-xl border border-cloud/70 bg-white/75 px-3 py-2 text-[11px] leading-relaxed text-ink outline-none placeholder:text-rock/60 focus:border-gold"
         />
       </label>
-      <div className="mt-1 flex items-center justify-between gap-2">
-        <p className="min-w-0 truncate text-[9px] text-rock" role="status">
-          {modelState.message}{intent ? ` · ${intent.inferenceMs}ms` : ""}
-        </p>
+      <div className="mt-1 flex items-center justify-end gap-2">
         <span className="shrink-0 text-[9px] text-rock">{query.length}/120</span>
       </div>
       {modelState.status === "loading" && (
@@ -68,14 +62,13 @@ export function SemanticPreferencePanel({
         className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-gold px-3 py-2 text-[11px] font-medium text-white disabled:opacity-45"
       >
         {analyzing ? <LoaderCircle className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
-        {analyzing ? "本地模型分析中" : "理解并推荐地点"}
+        {analyzing ? "正在理解" : "理解并推荐地点"}
       </button>
 
       {recommendations.length > 0 && (
         <div className="mt-3 border-t border-cloud/60 pt-2">
           <div className="flex items-center justify-between gap-2">
             <p className="text-[10px] font-medium text-ink">建议候选点</p>
-            <p className="text-[9px] text-rock">相对匹配分，不是概率</p>
           </div>
           <ul className="mt-1.5 space-y-1.5">
             {recommendations.map((match) => {
@@ -110,9 +103,6 @@ export function SemanticPreferencePanel({
               );
             })}
           </ul>
-          <p className="mt-2 text-[9px] leading-relaxed text-rock">
-            请确认 2～5 个地点后再生成路线；模型不会自动替你加入地点。
-          </p>
         </div>
       )}
     </section>

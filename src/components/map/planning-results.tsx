@@ -19,18 +19,6 @@ function poiName(id: string): string {
   return MAP_POIS.find((poi) => poi.id === id)?.name ?? id;
 }
 
-function updateLabel(value?: string): string {
-  if (!value) return "未记录";
-  return new Intl.DateTimeFormat("zh-CN", {
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-  }).format(new Date(value));
-}
-
 function RouteResultCard({
   route,
   active,
@@ -88,12 +76,6 @@ function RouteResultCard({
         共 {totalMinutes} 分钟，预计 {route.completionTime} 完成
         {totalMinutes <= budget ? "，预算内" : "，超出预算"}
       </p>
-      {typeof metrics.semanticMatchScore === "number" && metrics.semanticMatchScore > 0 && (
-        <p className="mt-1 text-[9px] leading-relaxed text-rock">
-          文本偏好相对匹配 {metrics.semanticMatchScore}/100；该指标参与软偏好评分，不覆盖闭馆与时间预算。
-        </p>
-      )}
-
       <div className="mt-3">
         <p className="text-[10px] font-medium text-ink">路线顺序</p>
         <ol className="mt-1.5 space-y-1" aria-label={`${route.name}路线顺序`}>
@@ -141,16 +123,14 @@ function AlgorithmColumn({ summary }: { summary: AlgorithmRouteSummary }) {
   return (
     <article className="min-w-0 rounded-xl border border-cloud/70 bg-white/65 p-2.5">
       <p className="text-[10px] font-semibold text-ink">{summary.label}</p>
-      <p className="mt-0.5 text-[9px] text-primary">{summary.engine}</p>
       <dl className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1 text-[9px] text-rock">
         <div><dt className="inline">地点 </dt><dd className="inline font-medium text-ink">{summary.poiIds.length} 个</dd></div>
         <div><dt className="inline">总时长 </dt><dd className="inline font-medium text-ink">{summary.totalMinutes} 分</dd></div>
         <div><dt className="inline">步行 </dt><dd className="inline font-medium text-ink">{summary.walkingMinutes} 分</dd></div>
         <div><dt className="inline">距离 </dt><dd className="inline font-medium text-ink">{summary.distanceKm.toFixed(1)} km</dd></div>
       </dl>
-      <p className="mt-2 text-[9px] leading-relaxed text-rock">{summary.note}</p>
       <p className={cn("mt-1 text-[9px] font-medium", summary.feasible ? "text-primary" : "text-amber-700")}>
-        {summary.feasible ? "通过时间窗与预算校验" : "当前约束下不可行"}
+        {summary.feasible ? "可行" : "不可行"}
       </p>
     </article>
   );
@@ -183,10 +163,6 @@ export function PlanningResults({
           <RefreshCw className="h-3 w-3" aria-hidden="true" />
           {replanMessage ?? "路线已生成"}
         </p>
-        <p className="mt-1 text-[9px] leading-relaxed text-rock">
-          数据更新时间：{updateLabel(shortest.dataUpdatedAt)} · 计算耗时 {shortest.calculationMs ?? "—"}ms
-        </p>
-        <p className="mt-0.5 text-[9px] leading-relaxed text-rock">{shortest.dataStatus}</p>
       </div>
 
       <RouteResultCard
@@ -222,22 +198,11 @@ export function PlanningResults({
             ))}
           </tbody>
         </table>
-        <p className="mt-2 text-[9px] leading-relaxed text-rock/80">
-          拥挤、体力和夜间指标来自项目样本估算，不代表实时客流。
-        </p>
       </div>
 
       {algorithmComparison && (
         <div className="rounded-xl border border-primary/15 bg-primary/5 p-3">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-[10px] font-semibold text-ink">基准、智能与最优验证</p>
-              <p className="mt-0.5 text-[9px] leading-relaxed text-rock">{algorithmComparison.objective}</p>
-            </div>
-            <span className="shrink-0 rounded-full bg-primary/10 px-2 py-1 text-[9px] font-medium text-primary">
-              精确核验 {algorithmComparison.exploredOrders} 序列
-            </span>
-          </div>
+          <p className="text-[10px] font-semibold text-ink">算法对照</p>
           <div className="mt-2 grid gap-2 sm:grid-cols-3">
             <AlgorithmColumn summary={algorithmComparison.baseline} />
             <AlgorithmColumn summary={algorithmComparison.intelligent} />
@@ -253,18 +218,6 @@ export function PlanningResults({
         </div>
       )}
 
-      {shortest.routingData && (
-        <div className="rounded-xl bg-white/55 p-3 text-[9px] leading-relaxed text-rock">
-          <p className="font-medium text-ink">路网数据依据</p>
-          <p className="mt-1">
-            POI 间采用 {shortest.routingData.provider} {shortest.routingData.providerVersion ?? ""} 的
-            {shortest.routingData.costing === "pedestrian" ? "步行" : shortest.routingData.costing}路网矩阵，
-            快照生成于 {updateLabel(shortest.routingData.generatedAt)}。
-            {shortest.routingData.originFallbackUsed ? "当前位置到首站的接入段为本地估算。" : "本次路线全部地点间路段均来自矩阵。"}
-          </p>
-          <p className="mt-1">{shortest.routingData.attribution}。该快照用于离线演示，不描述为实时路况。</p>
-        </div>
-      )}
     </section>
   );
 }

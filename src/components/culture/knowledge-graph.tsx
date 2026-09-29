@@ -142,10 +142,7 @@ export function KnowledgeGraph() {
     <section className="mt-16" aria-labelledby="knowledge-graph-title">
       <div className="flex items-center gap-3">
         <Network className="h-5 w-5 text-primary" aria-hidden="true" />
-        <div>
-          <h2 id="knowledge-graph-title" className="font-serif text-2xl font-semibold text-ink">南京文化知识图谱</h2>
-          <p className="mt-1 text-sm text-rock">本地 JSON-LD · {CULTURE_GRAPH.entities.length} 个实体 · {CULTURE_GRAPH.claims.length} 条可追溯关系</p>
-        </div>
+        <h2 id="knowledge-graph-title" className="font-serif text-2xl font-semibold text-ink">南京文化知识图谱</h2>
       </div>
 
       <div className="mt-6 rounded-3xl border border-white/70 bg-white/55 p-4 shadow-m md:p-6">
@@ -243,20 +240,17 @@ function EntityDetails({
           {claims.slice(0, 10).map((claim) => (
             <li key={claim.id} className="rounded-lg bg-white/65 p-2 text-xs leading-5 text-rock">
               {claim.text}
-              <span className="mt-1 block text-[10px] text-rock/65">
-                {claim.status === "verified" ? "已核验事实" : "项目编目判断"} · {claim.evidenceLevel} · {claim.id} · {claim.lastReviewedAt}
-              </span>
             </li>
           ))}
         </ul>
       </div>
       <details className="mt-4 border-t border-cloud/70 pt-3">
-        <summary className="cursor-pointer text-xs font-semibold text-ink">来源与更新时间（{sources.length}）</summary>
+        <summary className="cursor-pointer text-xs font-semibold text-ink">资料来源（{sources.length}）</summary>
         <div className="mt-2 space-y-2">
           {sources.map((source) => (
             <a key={source.id} href={source.url} target="_blank" rel="noreferrer" className="block text-xs leading-5 text-rock hover:text-primary">
               <span className="inline-flex items-start gap-1 font-medium text-ink">{source.title}<ExternalLink className="mt-1 h-3 w-3 shrink-0" /></span>
-              <span className="block">{source.publisher} · 核验 {source.accessedAt} · 页面更新 {source.pageUpdatedAt ?? "未标注"}</span>
+              <span className="block">{source.publisher}</span>
             </a>
           ))}
         </div>

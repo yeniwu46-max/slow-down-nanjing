@@ -28,7 +28,6 @@ interface RecommendPanelProps {
   onPlanningChange: (patch: Partial<PlanningOptions>) => void;
   onGenerate: () => void;
   onPickRoute: (route: MapRoute) => void;
-  onApplyScenario: (id: NonNullable<PlanningOptions["scenarioId"]>) => void;
   onRefreshWeather: () => void;
   onSemanticQueryChange: (value: string) => void;
   onAnalyzeSemantic: () => void;
@@ -51,7 +50,6 @@ export function RecommendPanel({
   onPlanningChange,
   onGenerate,
   onPickRoute,
-  onApplyScenario,
   onRefreshWeather,
   onSemanticQueryChange,
   onAnalyzeSemantic,
@@ -95,9 +93,6 @@ export function RecommendPanel({
                 <Sparkles className="h-4 w-4 text-gold" />
                 智能推荐
               </p>
-              <p className="mt-1 text-[11px] leading-relaxed text-rock">
-                选择 2～5 个候选地点。系统会在时间、天气和开放状态的硬约束内动态取舍。
-              </p>
             </div>
             <button
               type="button"
@@ -107,31 +102,6 @@ export function RecommendPanel({
             >
               <X className="h-4 w-4" />
             </button>
-          </div>
-
-          <div className="mt-3">
-            <p className="text-[10px] font-medium text-ink">固定验收场景</p>
-            <div className="mt-1.5 grid grid-cols-3 gap-1">
-              {[
-                ["rain-short", "雨天 45 分"],
-                ["culture-closing", "六朝与闭馆"],
-                ["weekend-night", "周末夜游"],
-              ].map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => onApplyScenario(id as NonNullable<PlanningOptions["scenarioId"]>)}
-                  className={cn(
-                    "rounded-lg px-1.5 py-2 text-[10px]",
-                    planningOptions.scenarioId === id
-                      ? "bg-gold text-white"
-                      : "bg-white/65 text-rock hover:bg-white",
-                  )}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
           </div>
 
           <SemanticPreferencePanel

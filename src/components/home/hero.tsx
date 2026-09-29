@@ -26,9 +26,6 @@ export function Hero() {
           <h1 className="font-serif text-3xl font-semibold leading-tight text-ink md:text-4xl lg:text-[2.5rem]">
             在有限时间里，走一条更适合你的南京
           </h1>
-          <p className="max-w-xl text-base leading-relaxed text-rock md:text-lg">
-            选择想去的地方，在少走路与更慢、更有风景之间，比较两种可解释的路线方案。
-          </p>
           <div className="mt-2 flex max-w-2xl flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Button href="/planner" size="lg" className="sm:min-w-44">
               <Route className="h-4 w-4" />
@@ -40,7 +37,7 @@ export function Hero() {
             </Button>
             <Button href="/about" variant="ghost" size="lg" className="sm:min-w-52">
               <BookOpenText className="h-4 w-4" />
-              项目原理与数据说明
+              项目原理
             </Button>
           </div>
         </div>

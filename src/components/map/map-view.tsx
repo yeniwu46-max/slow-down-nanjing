@@ -33,63 +33,6 @@ import { RecommendPanel } from "./recommend-panel";
 
 const FILTERS: MapFilter[] = ["全部", "文化古迹", "自然风景", "街巷小巷", "文艺生活"];
 
-const SCENARIOS: Record<NonNullable<PlanningOptions["scenarioId"]>, {
-  pickedIds: string[];
-  options: Partial<PlanningOptions>;
-}> = {
-  "rain-short": {
-    pickedIds: ["jiming-temple", "taicheng"],
-    options: {
-      originMode: "current",
-      startPoiId: null,
-      currentLocation: {
-        lat: 32.0699,
-        lng: 118.7969,
-        source: "nanjing-default",
-      },
-      timeBudgetMinutes: 45,
-      walkingAbility: "relaxed",
-      weatherCondition: "rainy",
-      preference: "efficiency",
-      departureTimeMinutes: 14 * 60,
-      closedPoiIds: [],
-      avoidCrowds: false,
-      nightMode: false,
-      cultureFocusTags: [],
-    },
-  },
-  "culture-closing": {
-    pickedIds: ["xuanwu-lake", "jiming-temple", "taicheng", "nanjing-museum", "presidential-palace"],
-    options: {
-      startPoiId: "xuanwu-lake",
-      timeBudgetMinutes: 150,
-      walkingAbility: "balanced",
-      weatherCondition: "cloudy",
-      preference: "culture",
-      departureTimeMinutes: 16 * 60 + 10,
-      closedPoiIds: [],
-      avoidCrowds: false,
-      nightMode: false,
-      cultureFocusTags: ["六朝文化"],
-    },
-  },
-  "weekend-night": {
-    pickedIds: ["1912", "presidential-palace", "confucius-temple", "laomendong", "yihe-road"],
-    options: {
-      startPoiId: "1912",
-      timeBudgetMinutes: 180,
-      walkingAbility: "balanced",
-      weatherCondition: "cloudy",
-      preference: "scenery",
-      departureTimeMinutes: 18 * 60 + 30,
-      closedPoiIds: ["presidential-palace"],
-      avoidCrowds: true,
-      nightMode: true,
-      cultureFocusTags: [],
-    },
-  },
-};
-
 export function MapView({
   initialRecommendOpen = false,
 }: {
@@ -280,7 +223,7 @@ export function MapView({
     setRecScenic(scenic);
     setActiveRoute(preferred);
     setAltRoute(alternative);
-    setReplanMessage(`${reason}，已在 ${calculationMs}ms 内重新规划`);
+    setReplanMessage(reason === "首次规划" ? "路线已生成" : `${reason}，路线已更新`);
     mapRef.current?.fitRoute(preferred);
   }, [dataStatus, dataUpdatedAt, pickedIds, planningOptions, resolveStartId, statedPois]);
 
@@ -311,7 +254,7 @@ export function MapView({
           ? "本地 BGE 语义模型 + 本地场馆与道路样本（非实时）"
           : "本地规则兜底 + 本地场馆与道路样本（非实时）",
       );
-      setReplanMessage(`已理解路线偏好，推荐 ${Math.min(5, intent.matches.length)} 个候选地点，请确认后规划。`);
+      setReplanMessage("路线偏好已识别");
     } catch (error) {
       setReplanMessage(error instanceof Error ? error.message : "路线偏好分析失败，请重试。 ");
     }
@@ -324,21 +267,6 @@ export function MapView({
     }, 60);
     return () => window.clearTimeout(timer);
   }, [hasGenerated, pickedIds, planningOptions, runRecommend]);
-
-  function applyScenario(id: NonNullable<PlanningOptions["scenarioId"]>) {
-    const scenario = SCENARIOS[id];
-    pendingReasonRef.current = "验收场景变化";
-    setPickedIds(scenario.pickedIds);
-    setPlanningOptions({
-      ...DEFAULT_PLANNING_OPTIONS,
-      ...scenario.options,
-      scenarioId: id,
-    });
-    setDataUpdatedAt(new Date().toISOString());
-    setDataStatus("固定验收场景 + 本地场馆与道路样本（非实时）");
-    setSemanticQuery("");
-    setHasGenerated(true);
-  }
 
   function pickRecommended(route: MapRoute) {
     setActiveRoute(route);
@@ -393,7 +321,6 @@ export function MapView({
           <div className="flex items-start justify-between gap-2">
             <div>
               <h1 className="font-serif text-xl font-semibold text-ink">我的南京地图</h1>
-              <p className="mt-1 text-xs text-rock">点开一处风物，慢慢看，慢慢走。</p>
             </div>
             <button
               type="button"
@@ -562,7 +489,6 @@ export function MapView({
         onPlanningChange={updatePlanningOptions}
         onGenerate={generateRecommend}
         onPickRoute={pickRecommended}
-        onApplyScenario={applyScenario}
         onRefreshWeather={refreshWeather}
         onSemanticQueryChange={setSemanticQuery}
         onAnalyzeSemantic={analyzeSemanticPreference}

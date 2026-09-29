@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { label: "智能路线规划", href: "/planner" },
   { label: "经典路线", href: "/map" },
-  { label: "项目原理与数据说明", href: "/about" },
+  { label: "项目原理", href: "/about" },
 ];
 
 export function Nav() {
